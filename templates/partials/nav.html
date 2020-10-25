@@ -1,0 +1,58 @@
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet"
+          href="https://firebasestorage.googleapis.com/v0/b/personal-1c08e.appspot.com/o/ic_menu.css?alt=media&amp;token=d3e0e883-baca-49e2-8e0d-4c43d1ca59c2">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+
+    <link rel="stylesheet" href="{% static 'css/nav.css' %}">
+{% endblock %}
+
+<navbar>
+    <div class="navbar nav navbar-fixed-top navbar-inverse">
+        <div class="container-fluid">
+            <div class="v-flex">
+                <div class="navbar-body">
+                    <div class="navbar-start">
+                        <div class="hamburger-menu">
+                            <div class="ic_menu navbar-toggler toggle-nav-sidebar">
+{#                                todo: make the navbar workxs#}
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                        <img class="logo navbar-logo" src="{% static 'images/favicon.ico' %}">
+                    </div>
+                    <div class="navbar-end">
+                        <a style="text-transform: uppercase">Login</a>
+                    </div>
+                    <div class="search">
+                        <input type="text" class="search-textbox" placeholder="Search">
+                        <a class="ico-btn search-btn"><i class="material-icons ic_search">&#xE8B6;</i></a>
+                        <a class="ico-btn clear-btn"><i class="material-icons ic_clear">&#xE14C;</i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="navbar navbar-fixed-top navbar-inverse tabs paper-shadow-bottom-z-2">
+        <div class="container-fluid">
+            <ul class="navbar-body list-inline">
+                <li class="active"><a class="active">Home</a></li>
+                <li><a>Potion Lab</a></li>
+                <li><a>Stats</a></li>
+                <li><a>System Log Feed</a></li>
+            </ul>
+            <div class="tab-highlighter"></div>
+        </div>
+    </div>
+    <!--2 navbar for pushing 1 above after scrolling (Not Implemented yet.)-->
+</navbar>
+
+{% block js %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="{% static 'js/nav.js' %}"></script>
+{% endblock %}
