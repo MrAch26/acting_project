@@ -1,2 +1,0 @@
-# acting_project
- 
