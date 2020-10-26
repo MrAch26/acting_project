@@ -3,7 +3,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django_email_verification import sendConfirm
 from django.db import models
-
+from phonenumber_field.modelfields import PhoneNumberField
 
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
@@ -16,28 +16,16 @@ class CustomUser(AbstractUser):
             return self.agent_profile
 
 
-class HairColor(models.Model):
+class PhysicalInfo(models.Model):
     HAIR_CHOICES = [("black", "Black"), ("brown", "Brown"), ("blond", "Blond"), ("red", "Red")]
-    name = models.CharField(choices=HAIR_CHOICES, max_length=50)
-
-
-class EyesColor(models.Model):
     EYES_CHOICES = [("blue", "Blue"), ("brown", "Brown"), ("green", "Green"), ("grey", "Grey")]
-    name = models.CharField(choices=EYES_CHOICES, max_length=50)
-
-
-class TypesOfHair(models.Model):
     TYPES_OF_HAIR = [("S", "Straight"), ("C", "Curly"), ("A", "Affro"), ("O", "Other")]
-    name = models.CharField(choices=TYPES_OF_HAIR, max_length=50)
-
-
-class SkinColor(models.Model):
     SKIN_CHOICES = [("B", "Black"), ("W", "White"), ("DB", "Dark-Brown"), ("brown", "Brown"), ("LB", "Light-Brown")]
-    name = models.CharField(choices=SKIN_CHOICES, max_length=50)
 
-
-class WorkHistory(models.Model):
-    pass
+    hair_color = models.CharField(choices=HAIR_CHOICES, max_length=50)
+    eyes_color = models.CharField(choices=EYES_CHOICES, max_length=50)
+    types_of_hair = models.CharField(choices=TYPES_OF_HAIR, max_length=50)
+    skin_color = models.CharField(choices=SKIN_CHOICES, max_length=50)
 
 
 class ActorProfile(models.Model):
@@ -46,15 +34,11 @@ class ActorProfile(models.Model):
     last_name = models.CharField(max_length=50)
     agency = models.CharField(blank=True, max_length=100)
     birth_date = models.DateField()
-    phone = models.PhoneNumberField(blank=True)
+    phone = PhoneNumberField(blank=True)
     education = models.TextField()
     height = models.IntegerField()
-    hair_color = models.ForeignKey(HairColor)
-    eyes_color = models.ForeignKey(EyesColor)
-    types_of_hair = models.ForeignKey(TypesOfHair)
-    skin_color = models.ForeignKey(SkinColor)
-    picture = models.ImageField(required=False)
-    work_history = models.OneToOneField(WorkHistory)
+    physical_infos = models.OneToOneField(PhysicalInfo, on_delete=models.CASCADE)
+    picture = models.ImageField(default='static/images/profiledefault.jpeg')
 
 
 class AgentProfile(models.Model):
@@ -62,7 +46,22 @@ class AgentProfile(models.Model):
     name_of_agent = models.CharField(max_length=100)
     created_in = models.DateField()
     website = models.URLField(blank=True)
-    social_medias = models.TextField(blank=True)
+    social_media = models.CharField(max_length=50, blank=True)
+
+
+class Project(models.Model):
+    TYPE_PROJECT_CHOICES = [("movie", "Movie"), ("tv-show", "TV-Show"), ("play", "Theatrical Play"), ("other", "Other")]
+    name = models.CharField(max_length=50)
+    type_of_project = models.CharField(max_length=30, choices=TYPE_PROJECT_CHOICES)
+    description = models.TextField()
+
+    
+class WorkHistory(models.Model):
+    ROLE_CHOICES = [("main", "Main"), ("sup", "Supporting"), ("extra", "Extra")]
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    publish_date = models.DateTimeField()
+    role_type = models.CharField(default="extra", choices=ROLE_CHOICES, max_length=50)
+    actor_profile = models.ForeignKey(ActorProfile, on_delete=models.CASCADE)
 
 
 @receiver(post_save, sender=CustomUser)
