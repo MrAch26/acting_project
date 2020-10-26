@@ -1,10 +1,6 @@
-from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
-from django.contrib.auth.views import LoginView
-from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, UpdateView, DetailView
-from django_email_verification import sendConfirm
 
 from accounts.forms import UserSignupForm, ProfileViewForm
 from accounts.models import Profile
