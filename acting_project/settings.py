@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts',
     'main',
-    'django_email_verification'
+    'django_email_verification',
+    'phonenumber_field'
 ]
 
 MIDDLEWARE = [
