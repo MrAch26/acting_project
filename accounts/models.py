@@ -26,19 +26,17 @@ class PhysicalInfo(models.Model):
     eyes_color = models.CharField(choices=EYES_CHOICES, max_length=50)
     types_of_hair = models.CharField(choices=TYPES_OF_HAIR, max_length=50)
     skin_color = models.CharField(choices=SKIN_CHOICES, max_length=50)
+    height = models.IntegerField()
 
 
 class ActorProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
     agency = models.CharField(blank=True, max_length=100)
     birth_date = models.DateField()
     phone = PhoneNumberField(blank=True)
     education = models.TextField()
-    height = models.IntegerField()
-    physical_infos = models.OneToOneField(PhysicalInfo, on_delete=models.CASCADE)
     picture = models.ImageField(default='static/images/profiledefault.jpeg')
+    physical_infos = models.OneToOneField(PhysicalInfo, on_delete=models.CASCADE)
 
 
 class AgentProfile(models.Model):
@@ -54,6 +52,7 @@ class Project(models.Model):
     name = models.CharField(max_length=50)
     type_of_project = models.CharField(max_length=30, choices=TYPE_PROJECT_CHOICES)
     description = models.TextField()
+
 
     
 class WorkHistory(models.Model):
