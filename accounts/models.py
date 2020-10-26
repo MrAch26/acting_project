@@ -46,7 +46,7 @@ class ActorProfile(models.Model):
     last_name = models.CharField(max_length=50)
     agency = models.CharField(blank=True, max_length=100)
     birth_date = models.DateField()
-    phone = models.PhoneNumberField(blank=True)
+    phone = PhoneNumberField(blank=True)
     education = models.TextField()
     height = models.IntegerField()
     hair_color = models.ForeignKey(HairColor)
