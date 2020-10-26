@@ -2,8 +2,8 @@ from django.contrib.auth.models import User
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, UpdateView, DetailView
 
-from accounts.forms import UserSignupForm, ProfileViewForm
-from accounts.models import Profile
+from accounts.forms import UserSignupForm
+
 
 class UserSignUp(CreateView):
     template_name = "registration/signup.html"
@@ -33,10 +33,10 @@ class UserSignUp(CreateView):
     #         return redirect(reverse(self.get_success_url()))
 
 
-class ProfileView(UpdateView):
-    model = Profile
-    template_name = '../templates/profile.html'
-    form_class = ProfileViewForm
-    success_url = reverse_lazy('home')
+# class ProfileView(UpdateView):
+#     model = Profile
+#     template_name = '../templates/profile.html'
+#     form_class = ProfileViewForm
+#     success_url = reverse_lazy('home')
 
 # class MyLoginView(LoginView):
