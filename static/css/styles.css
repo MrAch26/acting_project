@@ -1,3 +1,4 @@
-body{
-    /*background-color:royalblue;*/
+
+.form-panel:not(.active) {
+    display:none;
 }

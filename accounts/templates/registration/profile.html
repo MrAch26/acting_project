@@ -1,13 +1,22 @@
-{% extends 'partials/base.html' %}
+{% extends 'base.html' %}
 {% block title %}
 My Profile
 {% endblock %}
 {% block content %}
 <h1>My Profile:</h1>
-<form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Save</button>
-        </form>
+   <p>First Name: {{ user.first_name }}</p>
+   <p>Last Name: {{ user.last_name }}</p>
+{#    <p>{{ agentprofile }}</p>#}
+{##}
+{#    {% for foo in actorprofile_set.all() %}#}
+{#    {{ foo }}#}
+{#    {% endfor %}#}
+{##}
+{##}
+{#    {% for agentprofile in agentprofile_list %}#}
+{#    website : {{ agentprofile.website  }}#}
+{#    {% endfor %}#}
+
+
 {% endblock %}
 

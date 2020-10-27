@@ -1,37 +1,25 @@
 {% extends "base.html" %}
-
+{% load static  %}
+{% load bootstrap4 %}
 {% block title %}
     Profile
 {% endblock %}
 
-{% block content %}
-    <h2>Edit your profile</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ formset.management_form }}
-        {{ user_form.as_p }}
-        {{ profile_form.as_p }}
 
-        <div id="form_set">
-            {% for form in formset.forms %}
-                <table class='no_error'>
-                    {{ form }}
-                </table>
-            {% endfor %}
-        </div>
-
-        <input type="button" value="Add More" id="add_more">
-        <div id="empty_form" style="display:none">
-            <table class='no_error'>
-                {{ formset.empty_form }}
-            </table>
-        </div>
-
-        <input type="submit" value="Save">
-    </form>
+{% block css %}
+{#    <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>#}
 {% endblock %}
 
+
+
 {% block js %}
+
+{% for form in formset.forms %}
+{{ form.media }}
+{% endfor %}
+    {{ form1.media }}
+    {{ formset.media }}
+
     <script type="text/javascript">
         $('#add_more').click(function () {
             var form_idx = $('#id_form-TOTAL_FORMS').val();
@@ -39,5 +27,93 @@
             $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
         });
     </script>
-    {#to seerate the forms#}
+
+    <script>
+        $('.previous').click(function () {
+            var cur = $('.form-panel').index($('.form-panel.active'));
+            if (cur != 0) {
+                $('.form-panel').removeClass('active');
+                $('.form-panel').eq(cur - 1).addClass('active');
+            }
+        });
+        $('.next').click(function () {
+            var cur = $('.form-panel').index($('.form-panel.active'));
+            if (cur != $('.form-panel').length - 1) {
+                $('.form-panel').removeClass('active');
+                $('.form-panel').eq(cur + 1).addClass('active');
+            }
+        });</script>
+
+
+
 {% endblock %}
+
+
+
+
+{% block content %}
+    <div style="margin: 10px 50px 50px">
+        <h2>Edit your profile</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ formset.management_form }}
+            {% bootstrap_form user_form %}
+            {% bootstrap_form profile_form %}
+
+{#            <hr>#}
+            <div id="form_set">
+                {% for form in formset.forms %}
+                    <table class='no_error'>
+                        <hr style="border:3px solid black">
+                         {{ form.as_p }}
+                    {{ form1 }}
+                    </table>
+                {% endfor %}
+            </div>
+
+
+            <div id="empty_form" style="display:none">
+                <table class='no_error'>
+                    <hr style="border:3px solid black">
+                    {% bootstrap_form formset.empty_form %}
+                    {{ form1 }}
+                </table>
+            </div>
+
+
+{#<div class="form-panel active">{% bootstrap_form user_form %}</div>#}
+{#<div class="form-panel">{% bootstrap_form profile_form %}</div>#}
+{##}
+{#<div class="form-panel">#}
+{#                <div id="form_set">#}
+{#                    {% for form in formset.forms %}#}
+{#                        <table class='no_error'>#}
+{#                            <hr style="border:3px solid black">#}
+{#                            {% bootstrap_form form %}#}
+{#                        </table>#}
+{#                    {% endfor %}#}
+{#                </div>#}
+{#            <input type="button" class="btn btn-primary" value="Add More" id="add_more">#}
+{##}
+{##}
+{#</div>#}
+
+{#<div class="form-panel">Panel four content here</div>#}
+
+            <button type="button" class="btn btn-primary">Submit</button>
+
+<br>
+
+{#<button class="previous" type="button">Previous</button>#}
+{#<button class="next" type="button">Next</button>#}
+            <br>
+            <br>
+</form>
+
+
+{#{% bootstrap_form form1 %}#}
+
+
+    </div>
+{% endblock %}
+

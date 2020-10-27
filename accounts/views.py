@@ -1,9 +1,15 @@
+from dal import autocomplete
+from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
-from django.views.generic import CreateView, UpdateView, DetailView
-from accounts.forms import UserSignupForm, EditActorProfile, EditAgentProfile, EditUser, WorkHistoryFormSet
+from django.views.generic import CreateView, UpdateView, DetailView, ListView
+from django.views.generic.base import View
+
+from accounts.forms import UserSignupForm, EditActorProfile, EditAgentProfile, EditUser, WorkHistoryFormSet, \
+    WorkHistoryForm
+from accounts.models import ActorProfile, AgentProfile, Project
 
 
 class UserSignUp(CreateView):
@@ -12,6 +18,14 @@ class UserSignUp(CreateView):
     form_class = UserSignupForm
     # success_url = reverse_lazy('home') redireect if actor or not
     failed_message = "The User couldn't be added"
+
+    def get_success_url(self, **kwargs):
+        if self.is_actor:
+            return reverse_lazy('edit_profile')
+        else:
+            return reverse_lazy('edit_agent')
+
+    # todo: redirect to update profile
 
     # def form_valid(self, form):
     #     user_to_add = form.cleaned_data
@@ -25,6 +39,7 @@ class UserSignUp(CreateView):
     #
     #
     #         return
+
 
 def actor_profile(request):
     user_edit_form = EditUser(request.POST or None, instance=request.user)
@@ -48,18 +63,45 @@ def actor_profile(request):
                 workhistory = form.save(commit=False)
                 workhistory.actor_profile = profile
                 workhistory.save()
+            # messages.add_message(request, messages.INFO, 'You have created an Actor Account successfully')
             return redirect('home')
 
-    context = {'user_form': user_edit_form, 'profile_form': profile_edit_form, 'formset': formset}
+    form = WorkHistoryForm()
+    context = {'user_form': user_edit_form, 'profile_form': profile_edit_form, 'formset': formset, 'form1': form}
 
     return render(request, 'accounts/edit_profile.html', context)
 
 
+def agent_profile(request):
+    user_edit_form = EditUser(request.POST or None, instance=request.user)
+    agent_edit_form = EditAgentProfile(request.POST or None, instance=request.user.profile())
 
-# class ProfileView(UpdateView):
-#     model = Profile
-#     template_name = '../templates/profile.html'
-#     form_class = ProfileViewForm
-#     success_url = reverse_lazy('home')
+    if request.method == 'POST':
+        if user_edit_form.is_valid() and agent_edit_form.is_valid():
+            user = user_edit_form.save()
+            profile_agent = agent_edit_form.save()
+            # messages.add_message(request, messages.INFO, 'You have created an Actor Account successfully')
+            return redirect('home')
+
+    context = {'user_form': user_edit_form, 'agent_form': agent_edit_form}
+
+    return render(request, 'accounts/edit_agent.html', context)
+
+# def profile(request):
+
+
+class ProjectAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = Project.objects.all()
+        if self.q:
+            qs = qs.filter(name__istartswith=self.q)
+        return qs
+
+
+
+# todo: def request
+# class ProfileView(DetailView):
+#     model = AgentProfile, ActorProfile
+#     template_name = 'registration/profile.html'
 
 # class MyLoginView(LoginView):

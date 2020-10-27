@@ -40,7 +40,7 @@ class ActorProfile(models.Model):
 
 class AgentProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    name_of_agent = models.CharField(max_length=100)
+    name_of_agent = models.CharField(max_length=100, blank=True)
     created_in = models.DateField(null=True)
     website = models.URLField(blank=True)
     social_media = models.CharField(max_length=50, blank=True)
@@ -49,13 +49,15 @@ class AgentProfile(models.Model):
 class Project(models.Model):
     TYPE_PROJECT_CHOICES = [("movie", "Movie"), ("tv-show", "TV-Show"), ("play", "Theatrical Play"), ("other", "Other")]
     name = models.CharField(max_length=50)
-    type_of_project = models.CharField(max_length=30, choices=TYPE_PROJECT_CHOICES)
-    description = models.TextField()
+    type_of_project = models.CharField(max_length=30, choices=TYPE_PROJECT_CHOICES, default='movie')
+    description = models.TextField(blank=True, null=True)
 
+    def __str__(self):
+        return self.name
     
 class WorkHistory(models.Model):
     ROLE_CHOICES = [("main", "Main"), ("sup", "Supporting"), ("extra", "Extra")]
-    # project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
     publish_date = models.DateTimeField()
     role_type = models.CharField(default="extra", choices=ROLE_CHOICES, max_length=50)
     actor_profile = models.ForeignKey(ActorProfile, on_delete=models.CASCADE)
