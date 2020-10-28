@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static  %}
+{% load static %}
 {% load bootstrap4 %}
 {% block title %}
     Profile
@@ -7,17 +7,13 @@
 
 
 {% block css %}
-{#    <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>#}
+    {#    <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>#}
 {% endblock %}
 
 
 
 {% block js %}
 
-{% for form in formset.forms %}
-{{ form.media }}
-{% endfor %}
-    {{ form1.media }}
     {{ formset.media }}
 
     <script type="text/javascript">
@@ -57,63 +53,57 @@
         <form method="post">
             {% csrf_token %}
             {{ formset.management_form }}
-            {% bootstrap_form user_form %}
-            {% bootstrap_form profile_form %}
+            {#            {% bootstrap_form user_form %}#}
+            {#            {% bootstrap_form profile_form %}#}
+            {##}
+            {#            <hr>#}
+{#            <div id="form_set">#}
+{#                {% for form in formset %}#}
+{#                    <table class='no_error'>#}
+{#                        <hr style="border:3px solid black">#}
+{#                        {% bootstrap_form form %}#}
+{#                    </table>#}
+{#                {% endfor %}#}
+{#            </div>#}
+            {##}
+            {##}
+                        <div id="empty_form" style="display:none">
+                            <table class='no_error'>
+                                <hr style="border:3px solid black">
+                                {% bootstrap_form formset.empty_form layout='horizontal' %}
+                            </table>
+                        </div>
 
-{#            <hr>#}
-            <div id="form_set">
-                {% for form in formset.forms %}
-                    <table class='no_error'>
-                        <hr style="border:3px solid black">
-                         {{ form.as_p }}
-                    {{ form1 }}
-                    </table>
-                {% endfor %}
+
+            <div class="form-panel active">{% bootstrap_form user_form %}</div>
+            <div class="form-panel">{% bootstrap_form profile_form %}</div>
+
+            <div class="form-panel">
+                <div id="form_set">
+                    {% for form in formset %}
+                        <table class='no_error'>
+                            <hr style="border:3px solid black">
+                            {% for field in form %}
+{#                                {% bootstrap_label field.label label_for=field.id_for_label %}#}
+                                {% bootstrap_field field layout='horizontal' %}
+                                {% endfor  %}
+                        </table>
+                    {% endfor %}
+                </div>
+                <input type="button" class="btn btn-primary" value="Add More" id="add_more">
             </div>
 
+            {#<div class="form-panel">Panel four content here</div>#}
 
-            <div id="empty_form" style="display:none">
-                <table class='no_error'>
-                    <hr style="border:3px solid black">
-                    {% bootstrap_form formset.empty_form %}
-                    {{ form1 }}
-                </table>
-            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
 
+            <br>
 
-{#<div class="form-panel active">{% bootstrap_form user_form %}</div>#}
-{#<div class="form-panel">{% bootstrap_form profile_form %}</div>#}
-{##}
-{#<div class="form-panel">#}
-{#                <div id="form_set">#}
-{#                    {% for form in formset.forms %}#}
-{#                        <table class='no_error'>#}
-{#                            <hr style="border:3px solid black">#}
-{#                            {% bootstrap_form form %}#}
-{#                        </table>#}
-{#                    {% endfor %}#}
-{#                </div>#}
-{#            <input type="button" class="btn btn-primary" value="Add More" id="add_more">#}
-{##}
-{##}
-{#</div>#}
-
-{#<div class="form-panel">Panel four content here</div>#}
-
-            <button type="button" class="btn btn-primary">Submit</button>
-
-<br>
-
-{#<button class="previous" type="button">Previous</button>#}
-{#<button class="next" type="button">Next</button>#}
+            <button class="previous" type="button">Previous</button>
+            <button class="next" type="button">Next</button>
             <br>
             <br>
-</form>
-
-
-{#{% bootstrap_form form1 %}#}
-
-
+        </form>
     </div>
 {% endblock %}
 

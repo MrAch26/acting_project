@@ -2,3 +2,7 @@
 .form-panel:not(.active) {
     display:none;
 }
+
+body{
+    background-color:#edefff;
+}

@@ -11,26 +11,29 @@
             <ul class="navbar-nav ml-auto">
                 <div class="hori-selector"><div class="left"></div><div class="right"></div></div>
 {#                todo: fix nav buttton #}
-                <li class="nav-item">
+                <li class="nav-item nav-panel">
                     <a class="nav-link" href="/"><i class="far fa-address-book"></i>Address Book</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item nav-panel {% if nav == 'about' %}active{% endif %}">
+                    <a class="about nav-link" href="{% url 'about' %}"><i class="fas fa-address-card"></i>About</a>
+                </li>
+                <li class="nav-item nav-panel">
                     <a class="nav-link" id="abc" href="javascript:void(document.getElementById('abc').href='xyz.php');"><i class="far fa-calendar-alt"></i>Calendar</a>
                 </li>
 {#            todo: use dropdown for logout 'dropdown-toggle'#}
                 {% if user.is_authenticated %}
-                <li class="nav-item active">
-                    <a class="nav-link" id="abc" href="/"><i class="fas fa-user"></i>{{ user.username }}</a>
+                <li class="nav-item nav-panel {% if nav == 'profile' %}active{% endif %}">
+                    <a class="nav-link" id="abc" href="{% url 'profile' user.username %}"><i class="fas fa-user"></i>{{ user.username }}</a>
                 </li>
-                <li class="nav-item ">
+                <li class="nav-item nav-panel">
                     <a class="nav-link" id="abc" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i>Logout</a>
                 </li>
                 {% else %}
-                <li class="nav-item">
-                    <a class="nav-link " href="{% url 'login' %}"><i class="fas fa-sign-in-alt"></i>Login</a>
-                </li>
-                <li class="nav-item active">
+                <li class="nav-item nav-panel {% if nav == 'signup' %}active{% endif %}">
                     <a class="nav-link" href="{% url 'signup' %}"><i class="fas fa-user-plus"></i>Signup</a>
+                </li>
+                <li class="nav-item nav-panel {% if nav == 'login' %}active{% endif %}">
+                    <a class="nav-link " href="{% url 'login' %}"><i class="fas fa-sign-in-alt"></i>Login</a>
                 </li>
                 {% endif %}
 

@@ -37,3 +37,4 @@ $(window).on('resize', function(){
 $(".navbar-toggler").click(function(){
   setTimeout(function(){ test(); });
 });
+

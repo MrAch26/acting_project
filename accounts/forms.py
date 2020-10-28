@@ -51,4 +51,4 @@ class WorkHistoryForm(forms.ModelForm):
         }
 
 
-WorkHistoryFormSet = formset_factory(WorkHistoryForm)
+WorkHistoryFormSet = formset_factory(WorkHistoryForm, extra=0)

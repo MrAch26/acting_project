@@ -1,9 +1,23 @@
 {% extends "base.html" %}
+{% now "H" as current_time %}
 
 {% block title %}
-    HOME
+Home
 {% endblock %}
 
 {% block content %}
 <h1>Home</h1>
+    Good{% if current_time > 12 %}
+            afternoon
+        {% elif current_time > 18%}
+            evening
+        {% else %}
+            morning
+    {{ user.first_name }}
+{% endif %}
+
+{% if not user.username %}
+<p>No one is logged in...</p>
+{% endif %}
+
 {% endblock %}
