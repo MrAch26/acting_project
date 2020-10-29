@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% block title %}
+Work History
+{% endblock %}
+
+{% block content %}
+    <h1>Update your WorkHistory </h1>
+    <form method="post">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+        {{ proj.type_of_project  }}
+{#        {{ workhistory.project.type_of_project }}#}
+    <button class="btn btn-success">Edit</button>
+    </form>
+
+{% endblock %}

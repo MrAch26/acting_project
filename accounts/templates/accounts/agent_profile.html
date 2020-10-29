@@ -4,25 +4,22 @@ My Profile
 {% endblock %}
 {% block content %}
 <h1>My Agent Profile:</h1>
-   <p>First Name: {{ user.first_name }}</p>
-   <p>Last Name: {{ user.last_name }}</p>
-{% for info in agent %}
+
             <div class="card mb-3" style="max-width: 800px;">
                 <div class="row no-gutters">
                     <div class="col-md-8">
                         <div class="card-body">
                             <h5 class="card-title">{{ user.first_name }} {{ user.last_name }}</h5>
-                            <p class="card-text">Agency : {{ info.agency }}</p>
-                            <p class="card-text">Date of birth : {{ info.birth_date }}</p>
-                            <p class="card-text">Phone : {{ info.phone }}</p>
-                            <p class="card-text">Education : {{ info.education }}</p>
+                            <p class="card-text">Name of Agent/Agency/Director : {{ info.name_of_agent }}</p>
+                            <p class="card-text">Created in : {{ info.created_in }}</p>
+                            <p class="card-text">Website : {{ info.website }}</p>
+                            <p class="card-text">Social Media : {{ info.social_media }}</p>
                             <a href="{% url 'edit_agent' %}" class="btn btn-primary">Update</a>
                             <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
                         </div>
                     </div>
                 </div>
             </div>
-    {% endfor  %}
 {#todo: finish template#}
 {% endblock %}
 

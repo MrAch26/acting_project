@@ -1,15 +1,17 @@
 from dal import autocomplete
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
-from django.views.generic import CreateView, UpdateView, DetailView, ListView
+from django.utils.decorators import method_decorator
+from django.views.generic import CreateView, UpdateView, DetailView, ListView, DeleteView
 from django.views.generic.base import View
 
 from accounts.forms import UserSignupForm, EditActorProfile, EditAgentProfile, EditUser, WorkHistoryFormSet, \
-    WorkHistoryForm
-from accounts.models import ActorProfile, AgentProfile, Project, CustomUser
+    WorkHistoryForm, EditProject, PhysicalInfoForm
+from accounts.models import ActorProfile, AgentProfile, Project, CustomUser, WorkHistory, PhysicalInfo
 
 
 class UserSignUp(CreateView):
@@ -27,20 +29,8 @@ class UserSignUp(CreateView):
 
     # todo: redirect to update profile
 
-    # def form_valid(self, form):
-    #     user_to_add = form.cleaned_data
-    #     print("user_to_add", user_to_add)
-    #
-    #     super(UserSignUp, self).form_valid(form)
-    #     print("---------form valid")
-    #     user = authenticate(self.request, username=form.cleaned_data['username'],
-    #                         password=form.cleaned_data['password1'])
-    #     if user.is_actor:
-    #
-    #
-    #         return
 
-def agent_profile(request):
+def edit_agent_profile(request):
     if request.user.is_actor:
         return redirect('edit_profile')
     user_edit_form = EditUser(request.POST or None, instance=request.user)
@@ -51,47 +41,43 @@ def agent_profile(request):
             user = user_edit_form.save()
             profile_agent = agent_edit_form.save()
             # messages.add_message(request, messages.INFO, 'You have created an Actor Account successfully')
-            return redirect('home')
+            return redirect(reverse_lazy('agent_profile', kwargs={'username': request.user.username}))
 
     context = {'user_form': user_edit_form, 'agent_form': agent_edit_form, 'nav': 'profile'}
 
     return render(request, 'accounts/edit_agent.html', context)
 
-def actor_profile(request):
+
+def edit_actor_profile(request):
     if not request.user.is_actor:
         return redirect('edit_agent')
     user_edit_form = EditUser(request.POST or None, instance=request.user)
     profile_edit_form = EditActorProfile(request.POST or None, instance=request.user.profile())
+    physical_info, created = PhysicalInfo.objects.get_or_create(actor_profile=request.user.profile())
+    physical_info_form = PhysicalInfoForm(request.POST or None, instance=physical_info)
 
-    # initial_data = []
-    #
-    # for workhistory in request.user.profile().workhistory_set.all():
-    #     initial_data.append({
-    #         'role_type': workhistory.role_type,
-    #         'publish_date': workhistory.publish_date,
-    #     })
-
-    formset = WorkHistoryFormSet(request.POST or None, initial=request.user.profile().workhistory_set.all().values())
+    formset = WorkHistoryFormSet(request.POST or None)
 
     if request.method == 'POST':
-        if user_edit_form.is_valid() and profile_edit_form.is_valid() and formset.is_valid():
+        if user_edit_form.is_valid() and profile_edit_form.is_valid() and physical_info_form.is_valid():
             user = user_edit_form.save()
             profile = profile_edit_form.save()
-            for form in formset:
-                workhistory = form.save(commit=False)
-                workhistory.actor_profile = profile
-                workhistory.save()
+            physical_info = physical_info_form.save()
             # messages.add_message(request, messages.INFO, 'You have created an Actor Account successfully')
-            return redirect('home')
+            return redirect(reverse_lazy('actor_profile', kwargs={'username': request.user.username}))
 
-    form = WorkHistoryForm()
-    context = {'user_form': user_edit_form, 'profile_form': profile_edit_form, 'formset': formset, 'form1': form, 'nav':'profile'}
+    work_history = request.user.profile()
+
+    context = {
+        'physical_form': physical_info_form,
+        'user_form': user_edit_form,
+        'profile_form': profile_edit_form,
+        'formset': formset,
+        'nav': 'profile',
+        'work': work_history
+    }
 
     return render(request, 'accounts/edit_profile.html', context)
-
-
-
-# def profile(request):
 
 
 class ProjectAutocomplete(autocomplete.Select2QuerySetView):
@@ -102,22 +88,59 @@ class ProjectAutocomplete(autocomplete.Select2QuerySetView):
         return qs
 
 
-
-# todo: def request
-# class ProfileView(DetailView):
-#     model = AgentProfile, ActorProfile
-#     template_name = 'registration/actor_profile.html'
-
-
-def get_user_profile(request, username):
+def show_agent_profile(request, username):
     user = CustomUser.objects.get(username=username)
-    actor = ActorProfile.objects.filter(user=request.user)
-    agent = AgentProfile.objects.filter(user=request.user)
+    profile = user.profile()
 
     if user.is_actor:
-        return render(request, 'accounts/actor_profile.html', {'actor': actor})
-    else:
-        return render(request, 'accounts/agent_profile.html', {"agent": agent})
+        return redirect('show_actor_profile', username)
+
+    return render(request, 'accounts/agent_profile.html', {'info': profile})
+
+def show_actor_profile(request, username):
+    user = CustomUser.objects.get(username=username)
+    profile = user.profile()
+    # physical_info_form = PhysicalInfoForm()
+
+    if not user.is_actor:
+        return redirect('show_agent_profile', username)
+
+    formset = WorkHistoryFormSet(request.POST or None)
+
+    if request.method == 'POST':
+        if formset.is_valid() and request.user == user:
+            for form in formset:
+                workhistory = form.save(commit=False)
+                workhistory.actor_profile = profile
+                workhistory.project.description = form.cleaned_data['desc']
+                workhistory.project.type_of_project = form.cleaned_data['type_of_project']
+                workhistory.project.save()
+                workhistory.save()
+
+    return render(request, 'accounts/actor_profile.html', {'info': profile, 'formset': WorkHistoryFormSet()})
 
 
 
+
+@method_decorator(login_required, name='dispatch')
+class UpdateWorkHistory(UpdateView):
+    model = WorkHistory
+    form_class = WorkHistoryForm
+
+    def get_success_url(self, **kwargs):
+        return reverse_lazy('profile', kwargs={'username': self.object.actor_profile.user.username})
+
+    #
+    # def get_context_data(self, **kwargs):
+    #     context = super(UpdateWorkHistory, self).get_context_data(**kwargs)
+    #     context['proj'] = EditProject
+    #     return context
+
+
+@method_decorator(login_required, name='dispatch')
+class DeleteWorkHistory(DeleteView):
+    model = WorkHistory
+    fields = '__all__'
+
+    def get_success_url(self, **kwargs):
+        return reverse_lazy('profile', kwargs={'username': self.object.actor_profile.user.username})

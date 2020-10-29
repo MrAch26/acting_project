@@ -22,11 +22,11 @@ class PhysicalInfo(models.Model):
     TYPES_OF_HAIR = [("S", "Straight"), ("C", "Curly"), ("A", "Affro"), ("O", "Other")]
     SKIN_CHOICES = [("B", "Black"), ("W", "White"), ("DB", "Dark-Brown"), ("brown", "Brown"), ("LB", "Light-Brown")]
 
-    hair_color = models.CharField(choices=HAIR_CHOICES, max_length=50)
-    eyes_color = models.CharField(choices=EYES_CHOICES, max_length=50)
-    types_of_hair = models.CharField(choices=TYPES_OF_HAIR, max_length=50)
-    skin_color = models.CharField(choices=SKIN_CHOICES, max_length=50)
-    height = models.IntegerField()
+    hair_color = models.CharField(choices=HAIR_CHOICES, max_length=50, null=True)
+    types_of_hair = models.CharField(choices=TYPES_OF_HAIR, max_length=50, null=True)
+    eyes_color = models.CharField(choices=EYES_CHOICES, max_length=50, null=True)
+    skin_color = models.CharField(choices=SKIN_CHOICES, max_length=50, null=True)
+    height = models.IntegerField(null=True)
     actor_profile = models.OneToOneField('ActorProfile', on_delete=models.CASCADE)
 
 class ActorProfile(models.Model):
@@ -37,6 +37,9 @@ class ActorProfile(models.Model):
     education = models.TextField(null=True)
     picture = models.ImageField(default='static/images/profiledefault.jpeg')
 
+    def __str__(self):
+        return f"{self.user.first_name} {self.user.last_name}"
+
 
 class AgentProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
@@ -44,6 +47,9 @@ class AgentProfile(models.Model):
     created_in = models.DateField(null=True)
     website = models.URLField(blank=True)
     social_media = models.CharField(max_length=50, blank=True)
+
+    def __str__(self):
+        return self.user.first_name, self.user.last_name
 
 
 class Project(models.Model):
@@ -58,8 +64,8 @@ class Project(models.Model):
 class WorkHistory(models.Model):
     ROLE_CHOICES = [("main", "Main"), ("sup", "Supporting"), ("extra", "Extra")]
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    publish_date = models.DateTimeField()
     role_type = models.CharField(default="extra", choices=ROLE_CHOICES, max_length=50)
+    publish_date = models.DateField()
     actor_profile = models.ForeignKey(ActorProfile, on_delete=models.CASCADE)
 
 

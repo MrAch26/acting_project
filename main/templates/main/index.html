@@ -16,6 +16,15 @@ Home
     {{ user.first_name }}
 {% endif %}
 
+{% if now < midday %}
+    morning
+{% elif now < evening %}
+    evening
+{% else %}
+   afternoon
+{% endif %}
+
+
 {% if not user.username %}
 <p>No one is logged in...</p>
 {% endif %}

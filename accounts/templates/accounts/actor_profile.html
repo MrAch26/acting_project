@@ -1,57 +1,127 @@
 {% extends 'base.html' %}
+{% load humanize %}
+{% load bootstrap4 %}
 {% block title %}
     My Profile
 {% endblock %}
-{% block content %}
-<div style="margin: 10px 50px 50px">
-        <h1>My Actor Profile:</h1>
-        {% for info in actor %}
 
-            <div class="card mb-3" style="max-width: 800px;">
-                <div class="row no-gutters">
-                    <div class="col-md-4">
-                        <img src="/{{ info.picture }}" class="card-img" alt="...">
+{% block js %}
+
+    {{ formset.media }}
+
+    <script type="text/javascript">
+        $('#add_more').click(function () {
+            var form_idx = $('#id_form-TOTAL_FORMS').val();
+            $('#form_set').append($('#empty_form').html().replace(/__prefix__/g, form_idx));
+            $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+        });
+    </script>
+
+{% endblock %}
+
+
+{% block content %}
+    <div style="margin: 10px 50px 50px">
+        <h1>My Actor Profile:</h1>
+        <div class="card mb-3" style="max-width: 800px;">
+            <div class="row no-gutters">
+                <div class="col-md-4">
+                    <img src="/{{ info.picture }}" class="card-img" alt="...">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ user.first_name }} {{ user.last_name }}</h5>
+                        <p class="card-text">Agency : {{ info.agency }}</p>
+                        <p class="card-text">Date of birth : {{ info.birth_date }}</p>
+                        <p class="card-text">Phone : {{ info.phone }}</p>
+                        <p class="card-text">Education : {{ info.education }}</p>
+                        <a href="{% url 'edit_profile' %}" class="btn btn-primary">Update</a>
+                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
                     </div>
+                </div>
+            </div>
+        </div>
+    <h2><u>Physical Info</u></h2>
+    <div class="card mb-3" style="max-width: 800px;">
+                <div class="row no-gutters">
                     <div class="col-md-8">
                         <div class="card-body">
-                            <h5 class="card-title">{{ user.first_name }} {{ user.last_name }}</h5>
-                            <p class="card-text">Agency : {{ info.agency }}</p>
-                            <p class="card-text">Date of birth : {{ info.birth_date }}</p>
-                            <p class="card-text">Phone : {{ info.phone }}</p>
-                            <p class="card-text">Education : {{ info.education }}</p>
-                            <a href="{% url 'edit_profile' %}" class="btn btn-primary">Update</a>
+                            <p class="card-text">Hair Color : {{ info.physicalinfo.get_hair_color_display }}</p>
+                            <p class="card-text">Type of Hair : {{ info.physicalinfo.get_types_of_hair_display }}</p>
+                            <p class="card-text">Eyes : {{ info.physicalinfo.get_eyes_color_display }}</p>
+                            <p class="card-text">Skin Color : {{ info.physicalinfo.get_skin_color_display }}</p>
+                            <p class="card-text">Height : {{ info.physicalinfo.height }}</p>
+                            <a href="{% url 'edit_agent' %}" class="btn btn-primary">Update</a>
                             <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
                         </div>
                     </div>
                 </div>
             </div>
-<h2>Work History:</h2>
-            <table class="table table-hover">
-                <thead>
+
+        <h2><u>Work History</u></h2>
+        <table class="table table-hover text-center">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Project</th>
+                <th scope="col">Project Type</th>
+                <th scope="col">Description</th>
+                <th scope="col">Role Type</th>
+                <th scope="col">Publish Date</th>
+                <th scope="col">Update</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for foo in info.workhistory_set.all %}
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Project</th>
-                    <th scope="col">Project Type</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Publish Date</th>
-                    <th scope="col">Role Type</th>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{ foo.project.name }}</td>
+                    <td>{{ foo.project.get_type_of_project_display }}</td>
+                    <td>{{ foo.project.description }}</td>
+                    <td>{{ foo.get_role_type_display }}</td>
+                    <td>{{ foo.publish_date | naturalday }}</td>
+                    <td>
+                        <div class="d-inline-block"><a class="btn btn-sm btn-success"
+                                                       href="{% url 'work-history-edit' foo.id %}">Edit</a></div>
+                        <div class="d-inline-block">
+                            <form method="post" action="{% url 'work-history-delete' foo.id %}">
+                                {% csrf_token %}
+                                <button class="btn btn-sm btn-danger">Delete</button>
+                            </form>
+                        </div>
+                    </td>
                 </tr>
-                </thead>
-                <tbody>
-                <tr>
-{#                    {% for foo in info.workhistory_set.all %}#}
-                    <th scope="row">1</th>
-{#                    <td>{{ foo.project.name  }}</td>#}
-                    <td>{{ info.workhistory_set.all.project.type_of_project  }}</td>
-                    <td>{{ info.workhistory_set.all.project.type_of_project  }}</td>
-                    <td>Otto</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-{#                    {% endfor %}#}
-                </tr>
-                </tbody>
-            </table>
-        {% endfor %}
-</div>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <form method="POST">
+        {% csrf_token %}
+        {{ formset.management_form }}
+
+        <div id="form_set">
+                    {% for form in formset %}
+                        <table class='no_error'>
+                            <hr style="border:3px solid black">
+                            {% for field in form %}
+                                {% bootstrap_field field layout='horizontal' %}
+                            {% endfor %}
+                        </table>
+                    {% endfor %}
+        </div>
+
+
+        <div id="empty_form" style="display:none">
+                <table class='no_error'>
+                    <hr style="border:3px solid black">
+                    {% bootstrap_form formset.empty_form layout='horizontal' %}
+                </table>
+        </div>
+
+
+        <input type="button" class="btn btn-primary" value="Add More" id="add_more">
+        <input class="btn btn-primary" type="submit">
+        </form>
+    </div>
 {% endblock %}
 
