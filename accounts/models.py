@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, Permission
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django_email_verification import sendConfirm
@@ -35,7 +35,7 @@ class ActorProfile(models.Model):
     birth_date = models.DateField(null=True)
     phone = PhoneNumberField(blank=True)
     education = models.TextField(null=True)
-    picture = models.ImageField(default='static/images/profiledefault.jpeg')
+    picture = models.ImageField(upload_to='profile_pics/', default='static/images/profiledefault.jpeg')
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name}"
@@ -49,7 +49,7 @@ class AgentProfile(models.Model):
     social_media = models.CharField(max_length=50, blank=True)
 
     def __str__(self):
-        return self.user.first_name, self.user.last_name
+        return f"{self.user.first_name} {self.user.last_name}"
 
 
 class Project(models.Model):
@@ -77,4 +77,7 @@ def create_profile(sender, created, instance, **kwargs):
         else:
             AgentProfile.objects.create(user=instance)
         sendConfirm(instance)
+
+        permission = Permission.objects.get(name='Can add project')
+        instance.user_permissions.add(permission)
 

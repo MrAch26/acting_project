@@ -13,14 +13,6 @@
 
     {{ formset.media }}
 
-    <script type="text/javascript">
-        $('#add_more').click(function () {
-            var form_idx = $('#id_form-TOTAL_FORMS').val();
-            $('#form_set').append($('#empty_form').html().replace(/__prefix__/g, form_idx));
-            $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
-        });
-    </script>
-
     <script>
         $('.previous').click(function () {
             var cur = $('.form-panel').index($('.form-panel.active'));
@@ -45,7 +37,7 @@
 {% block content %}
     <div style="margin: 10px 50px 50px">
         <h2>Edit your profile</h2>
-        <form method="POST">
+        <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             {{ formset.management_form }}
 

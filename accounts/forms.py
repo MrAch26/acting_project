@@ -64,12 +64,13 @@ class WorkHistoryForm(forms.ModelForm):
             'publish_date': DateInput()
         }
 
+
 WorkHistoryFormSet = formset_factory(WorkHistoryForm, extra=0)
 
 
 class EditProject(forms.ModelForm):
     class Meta:
-        Model = Project
-        fields = '__all__'
+        model = Project
+        exclude = ['name']
 
 

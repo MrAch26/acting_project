@@ -1,0 +1,14 @@
+{% extends 'base.html'%}
+{% block title %}
+Job nº{{ job.id }}
+{% endblock %}
+
+{% block content %}
+
+    <h1>Detail of the job opp :</h1>
+    <p>{{ job.age_wanted }}</p>
+    <p>{{ job.date_of_job }}</p>
+    <p>{{ job.initiator }}</p>
+{#    todo: to be done #}
+
+{% endblock %}

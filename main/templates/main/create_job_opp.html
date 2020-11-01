@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+{% block title %}
+    Create JobOpp
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}
+
+{% block content %}
+    <div style="margin: 10px 50px 50px">
+
+        <form method="post">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+{#            {% bootstrap_form proj_form %}#}
+            <input type="submit" value="Create" class="btn btn-danger">
+        </form>
+    </div>
+
+{% endblock %}

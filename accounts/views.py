@@ -22,12 +22,11 @@ class UserSignUp(CreateView):
     failed_message = "The User couldn't be added"
 
     def get_success_url(self, **kwargs):
-        if self.is_actor:
+        if self.request.user.is_actor:
             return reverse_lazy('edit_profile')
         else:
             return reverse_lazy('edit_agent')
 
-    # todo: redirect to update profile
 
 
 def edit_agent_profile(request):
@@ -52,13 +51,14 @@ def edit_actor_profile(request):
     if not request.user.is_actor:
         return redirect('edit_agent')
     user_edit_form = EditUser(request.POST or None, instance=request.user)
-    profile_edit_form = EditActorProfile(request.POST or None, instance=request.user.profile())
+    profile_edit_form = EditActorProfile(instance=request.user.profile())
     physical_info, created = PhysicalInfo.objects.get_or_create(actor_profile=request.user.profile())
     physical_info_form = PhysicalInfoForm(request.POST or None, instance=physical_info)
 
     formset = WorkHistoryFormSet(request.POST or None)
 
     if request.method == 'POST':
+        profile_edit_form = EditActorProfile(request.POST, request.FILES, instance=request.user.profile())
         if user_edit_form.is_valid() and profile_edit_form.is_valid() and physical_info_form.is_valid():
             user = user_edit_form.save()
             profile = profile_edit_form.save()
@@ -120,8 +120,6 @@ def show_actor_profile(request, username):
     return render(request, 'accounts/actor_profile.html', {'info': profile, 'formset': WorkHistoryFormSet()})
 
 
-
-
 @method_decorator(login_required, name='dispatch')
 class UpdateWorkHistory(UpdateView):
     model = WorkHistory
@@ -143,4 +141,5 @@ class DeleteWorkHistory(DeleteView):
     fields = '__all__'
 
     def get_success_url(self, **kwargs):
-        return reverse_lazy('profile', kwargs={'username': self.object.actor_profile.user.username})
+        return reverse_lazy('actor_profile', kwargs={'username': self.object.actor_profile.user.username})
+

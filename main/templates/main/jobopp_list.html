@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Casting Calllllz</h1>
+    <br>
+   <div class="container1">
+    {% for job in jobs %}
+        <div class="card text-center">
+
+            <div class="card-header">
+                New Casting/Auditions{% if job.from_home %} - from HOME !{% endif %}
+            </div>
+
+            <div class="card-body">
+                <h5 class="card-title">{{ job.project}}</h5>
+                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+            </div>
+            <div class="card-footer text-muted">
+                2 days ago
+            </div>
+        </div>
+
+
+
+        <p>{{ job.age_wanted }}</p>
+        <p>{{ job.date_of_job }}</p>
+        <p>{{ job.initiator }}</p>
+    {% endfor %}
+
+    <p></p>
+   </div>
+{% endblock %}

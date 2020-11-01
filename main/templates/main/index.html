@@ -6,15 +6,10 @@ Home
 {% endblock %}
 
 {% block content %}
+
 <h1>Home</h1>
-    Good{% if current_time > 12 %}
-            afternoon
-        {% elif current_time > 18%}
-            evening
-        {% else %}
-            morning
+    Good
     {{ user.first_name }}
-{% endif %}
 
 {% if now < midday %}
     morning
