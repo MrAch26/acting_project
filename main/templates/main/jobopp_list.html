@@ -1,33 +1,48 @@
 {% extends 'base.html' %}
-
+{% load humanize %}
 {% block content %}
-    <h1>Casting Calllllz</h1>
+    <h1>Casting Calllllz </h1>
+    {% if not user.is_actor %}<a href="{% url 'create_job_opp' %}" class="btn btn-danger">CREATE JOB OPP</a>{% endif %}
     <br>
    <div class="container1">
+   <div class="card-group">
     {% for job in jobs %}
-        <div class="card text-center">
+        <div class="card text-center m-2">
 
             <div class="card-header">
-                New Casting/Auditions{% if job.from_home %} - from HOME !{% endif %}
+
+                New Casting/Auditions
+                <p>
+                {% if job.is_paid %}
+                    <span class="badge badge-danger">PAID</span>
+                {% else %}
+                    <span class="badge badge-warning">NOT PAID</span>
+                {% endif %}
+                {% if job.from_home %}
+                    <span class="badge badge-info">From Home</span>
+                {% endif %}
+                </p>
             </div>
 
             <div class="card-body">
                 <h5 class="card-title">{{ job.project}}</h5>
-                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
+                <p class="card-text">With supporting dtext below as a natural lead-in to additional content.</p>
+                <p class="card-text"> Age between : {{ job.get_age_wanted_display }}</p>
+                <p class="card-text"> Date and Location : <strong>{{ job.location }}</strong> - {{ job.date_of_job|naturalday }}</p>
+                <a href="{%  url 'details_job_opp' job.id %}" class="btn btn-primary">More details</a>
+
             </div>
             <div class="card-footer text-muted">
-                2 days ago
+                {% if job.initiator == user.profile %}
+                <a href="{%  url 'update_job_opp' job.id %}" class="btn-sm btn-primary">Update</a>
+                {% endif  %}
+                Posted by {% firstof job.initiator.name_of_agent job.initiator %}, {{ job.posted_at | naturalday }}
             </div>
         </div>
 
-
-
-        <p>{{ job.age_wanted }}</p>
-        <p>{{ job.date_of_job }}</p>
-        <p>{{ job.initiator }}</p>
+        <p></p>
     {% endfor %}
-
+    </div>
     <p></p>
    </div>
 {% endblock %}

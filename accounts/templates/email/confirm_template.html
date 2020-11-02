@@ -1,17 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Confirmation</title>
-    <style>
-        body{ color: royalblue; }
-    </style>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}
+  Confirmation
+{% endblock %}
+
+{% block content %}
     {% if success %}
         You have confirmed your account!
+        <h1><a href="{% url 'edit_actor' %}">LOGIN</a> to your account now !</h1>
     {% else %}
         Error, invalid token!
+        <h1><a href="{% url 'signup' %}">SIGN-UP</a></h1>
     {% endif %}
-</body>
-</html>
+{% endblock %}

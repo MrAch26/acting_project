@@ -12,3 +12,6 @@ body{
     margin: 10px 50px 50px;
 }
 
+.fix-height1{
+    height: 38px!important;
+}

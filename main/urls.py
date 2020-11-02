@@ -9,6 +9,8 @@ urlpatterns = [
     path('job_opp/details/<pk>', views.details_job_opp, name='details_job_opp'),
     path('job_opp/update/<pk>', views.update_job_opp, name='update_job_opp'),
     path('job_opp/delete/<pk>', views.DeleteJobOpp.as_view(), name='delete_job_opp'),
+    path('location-autocomplete/', views.LocationAutocomplete.as_view(create_field='name'), name='location_autocomplete'),
 
+    path('participant/apply/<int:jobopp_id>', views.apply_for_job, name='apply-job'),
 
 ]

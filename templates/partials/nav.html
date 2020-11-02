@@ -10,7 +10,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto">
                 <div class="hori-selector"><div class="left"></div><div class="right"></div></div>
-{#                todo: fix nav buttton #}
+
 {#                <li class="nav-item nav-panel">#}
 {#                    <a class="nav-link" href="/"><i class="far fa-address-book"></i>Address Book</a>#}
 {#                </li>#}
@@ -20,7 +20,7 @@
                 <li class="nav-item nav-panel {% if nav == 'job_opp' %}active{% endif %}">
                     <a class="nav-link" id="abc" href="{% url 'job_opp' %}"><i class="fas fa-film"></i>Casting Calls</a>
                 </li>
-{#            todo: use dropdown for logout 'dropdown-toggle'#}
+
                 {% if user.is_authenticated %}
                 <li class="nav-item nav-panel {% if nav == 'profile' or nav == 'index' %}active{% endif %}">
                     <a class="nav-link" id="abc" href="{% if user.is_actor %}{% url 'actor_profile' user.username %}{% else %}{% url 'agent_profile' user.username %}{% endif %}"><i class="fas fa-user"></i>{{ user.username }}</a>

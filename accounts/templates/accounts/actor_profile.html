@@ -35,28 +35,28 @@
                         <p class="card-text">Date of birth : {{ info.birth_date }}</p>
                         <p class="card-text">Phone : {{ info.phone }}</p>
                         <p class="card-text">Education : {{ info.education }}</p>
-                        <a href="{% url 'edit_profile' %}" class="btn btn-primary">Update</a>
+                        <a href="{% url 'edit_actor' %}" class="btn btn-primary">Update</a>
                         <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
                     </div>
                 </div>
             </div>
         </div>
-    <h2><u>Physical Info</u></h2>
-    <div class="card mb-3" style="max-width: 800px;">
-                <div class="row no-gutters">
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <p class="card-text">Hair Color : {{ info.physicalinfo.get_hair_color_display }}</p>
-                            <p class="card-text">Type of Hair : {{ info.physicalinfo.get_types_of_hair_display }}</p>
-                            <p class="card-text">Eyes : {{ info.physicalinfo.get_eyes_color_display }}</p>
-                            <p class="card-text">Skin Color : {{ info.physicalinfo.get_skin_color_display }}</p>
-                            <p class="card-text">Height : {{ info.physicalinfo.height }}</p>
-                            <a href="{% url 'edit_agent' %}" class="btn btn-primary">Update</a>
-                            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                        </div>
+        <h2><u>Physical Info</u></h2>
+        <div class="card mb-3" style="max-width: 800px;">
+            <div class="row no-gutters">
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <p class="card-text">Hair Color : {{ info.physicalinfo.get_hair_color_display }}</p>
+                        <p class="card-text">Type of Hair : {{ info.physicalinfo.get_types_of_hair_display }}</p>
+                        <p class="card-text">Eyes : {{ info.physicalinfo.get_eyes_color_display }}</p>
+                        <p class="card-text">Skin Color : {{ info.physicalinfo.get_skin_color_display }}</p>
+                        <p class="card-text">Height : {{ info.physicalinfo.height }}</p>
+                        <a href="{% url 'edit_agent' %}" class="btn btn-primary">Update</a>
+                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
                     </div>
                 </div>
             </div>
+        </div>
 
         <h2><u>Work History</u></h2>
         <table class="table table-hover text-center">
@@ -96,31 +96,31 @@
         </table>
 
         <form method="POST">
-        {% csrf_token %}
-        {{ formset.management_form }}
+            {% csrf_token %}
+            {{ formset.management_form }}
 
-        <div id="form_set">
-                    {% for form in formset %}
-                        <table class='no_error'>
-                            <hr style="border:3px solid black">
-                            {% for field in form %}
-                                {% bootstrap_field field layout='horizontal' %}
-                            {% endfor %}
-                        </table>
-                    {% endfor %}
-        </div>
+            <div id="form_set">
+                {% for form in formset %}
+                    <table class='no_error'>
+                        <hr style="border:3px solid black">
+                        {% for field in form %}
+                            {% bootstrap_field field layout='horizontal' %}
+                        {% endfor %}
+                    </table>
+                {% endfor %}
+            </div>
 
 
-        <div id="empty_form" style="display:none">
+            <div id="empty_form" style="display:none">
                 <table class='no_error'>
                     <hr style="border:3px solid black">
                     {% bootstrap_form formset.empty_form layout='horizontal' %}
                 </table>
-        </div>
+            </div>
 
 
-        <input type="button" class="btn btn-primary" value="Add More" id="add_more">
-        <input class="btn btn-primary" type="submit">
+            <input type="button" class="btn btn-primary" value="Add More" id="add_more">
+            <input class="btn btn-primary" type="submit">
         </form>
     </div>
 {% endblock %}

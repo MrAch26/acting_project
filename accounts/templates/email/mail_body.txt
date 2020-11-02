@@ -1,3 +1,6 @@
+Thank you so much for SIGNIN UP to our platform 😋
+ONE LAST STEP !
 You are almost there!
 Please click the following link to confirm your account
 {{ link }}
+And then you will just have to LOGIN to your account ;)

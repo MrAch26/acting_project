@@ -1,9 +1,23 @@
-from django.contrib.auth.models import AbstractUser, Permission
+from datetime import date
+
+from django.contrib.auth import user_logged_in
+from django.contrib.auth.models import AbstractUser, Permission, update_last_login
+from django.core.exceptions import ValidationError
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django_email_verification import sendConfirm
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
+
+def no_future(value):
+    today = date.today()
+    if value > today:
+        raise ValidationError('Date cannot be in the future.')
+
+# def no_past(value):
+#     today = date.today()
+#     if value < today:
+#         raise ValidationError('Date cannot be in the past.')
 
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
@@ -44,13 +58,14 @@ class ActorProfile(models.Model):
 class AgentProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     name_of_agent = models.CharField(max_length=100, blank=True)
-    created_in = models.DateField(null=True)
+    created_in = models.DateField(null=True, help_text="Enter the date of creation", validators=[no_future])
     website = models.URLField(blank=True)
     social_media = models.CharField(max_length=50, blank=True)
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name}"
-
+    # def save(self, **kwargs):
+    #     super().save()
 
 class Project(models.Model):
     TYPE_PROJECT_CHOICES = [("movie", "Movie"), ("tv-show", "TV-Show"), ("play", "Theatrical Play"), ("other", "Other")]
@@ -79,5 +94,17 @@ def create_profile(sender, created, instance, **kwargs):
         sendConfirm(instance)
 
         permission = Permission.objects.get(name='Can add project')
+        permission1 = Permission.objects.get(name='Can add location')
         instance.user_permissions.add(permission)
+        instance.user_permissions.add(permission1)
 
+# @receiver(post_save, sender=CustomUser)
+# def update_first_login(sender, instance, **kwargs):
+#     if instance.user.last_login is None:
+#         # First time this user has logged in
+#         kwargs['request'].session['first_login'] = True
+#     # Update the last_login value as normal
+#     update_last_login(sender, instance.user, **kwargs)
+#
+# user_logged_in.disconnect(update_last_login)
+# user_logged_in.connect(update_first_login)

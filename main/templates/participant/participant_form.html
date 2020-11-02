@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+{% block content %}
+<h1>Apply for this job</h1>
+
+    <form method="post">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <input type="submit" value="Apply" class="btn btn-primary">
+    </form>
+{% endblock %}

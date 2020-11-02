@@ -21,19 +21,19 @@
 </head>
 <body>
 
-{% bootstrap_messages %}
-
-{% if messages %}
-    <ul>
-    {% for message in messages %}
-    <li class="alert-primary">{{ message }}</li>
-    {% endfor %}
-    </ul>
-{% endif %}
+{#{% if messages %}#}
+{#    <ul>#}
+{#    {% for message in messages %}#}
+{#    <li class="alert-primary">{{ message }}</li>#}
+{#    {% endfor %}#}
+{#    </ul>#}
+{#{% endif %}#}
 
 <header>
 {% include "partials/nav.html" %}
 </header>
+
+{% bootstrap_messages %}
 
 <main>
 {% block content %}
@@ -41,9 +41,8 @@
 </main>
 
 <footer>
-    {% block footer %}
-
-    {% endblock %}
+    <small><p style="text-align: center"> Copyright &copy; <script>document.write(new Date().getFullYear())</script> -
+        <a href="https://github.com/MrAch26/acting_project">Daniel Ach.</a> | All Rights Reserved.</p></small>
 </footer>
 
 

@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView
+from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
@@ -14,24 +15,25 @@ from accounts.forms import UserSignupForm, EditActorProfile, EditAgentProfile, E
 from accounts.models import ActorProfile, AgentProfile, Project, CustomUser, WorkHistory, PhysicalInfo
 
 
-class UserSignUp(CreateView):
+class UserSignUp(CreateView, SuccessMessageMixin):
     template_name = "registration/signup.html"
     model = User
     form_class = UserSignupForm
-    # success_url = reverse_lazy('home') redireect if actor or not
+    success_message = 'An email has been sent, please confirm your account and LOGIN'
+    success_url = reverse_lazy('home')
     failed_message = "The User couldn't be added"
 
-    def get_success_url(self, **kwargs):
-        if self.request.user.is_actor:
-            return reverse_lazy('edit_profile')
-        else:
-            return reverse_lazy('edit_agent')
+    # todo: not relevant because confirmation email needed !!
+    # def get_success_url(self, **kwargs):
+    #     if self.request.user.is_actor:
+    #         return reverse_lazy('edit_actor')
+    #     else:
+    #         return reverse_lazy('edit_agent')
 
-
-
+@login_required
 def edit_agent_profile(request):
     if request.user.is_actor:
-        return redirect('edit_profile')
+        return redirect('edit_actor')
     user_edit_form = EditUser(request.POST or None, instance=request.user)
     agent_edit_form = EditAgentProfile(request.POST or None, instance=request.user.profile())
 
@@ -46,7 +48,7 @@ def edit_agent_profile(request):
 
     return render(request, 'accounts/edit_agent.html', context)
 
-
+@login_required
 def edit_actor_profile(request):
     if not request.user.is_actor:
         return redirect('edit_agent')
@@ -77,7 +79,7 @@ def edit_actor_profile(request):
         'work': work_history
     }
 
-    return render(request, 'accounts/edit_profile.html', context)
+    return render(request, 'accounts/edit_actor.html', context)
 
 
 class ProjectAutocomplete(autocomplete.Select2QuerySetView):
@@ -87,7 +89,7 @@ class ProjectAutocomplete(autocomplete.Select2QuerySetView):
             qs = qs.filter(name__istartswith=self.q)
         return qs
 
-
+@login_required
 def show_agent_profile(request, username):
     user = CustomUser.objects.get(username=username)
     profile = user.profile()
@@ -97,6 +99,7 @@ def show_agent_profile(request, username):
 
     return render(request, 'accounts/agent_profile.html', {'info': profile})
 
+@login_required
 def show_actor_profile(request, username):
     user = CustomUser.objects.get(username=username)
     profile = user.profile()

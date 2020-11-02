@@ -1,14 +1,55 @@
-{% extends 'base.html'%}
+{% extends 'base.html' %}
+{% load humanize %}
 {% block title %}
-Job nº{{ job.id }}
+    Job nº{{ job.id }}
 {% endblock %}
 
 {% block content %}
 
-    <h1>Detail of the job opp :</h1>
-    <p>{{ job.age_wanted }}</p>
-    <p>{{ job.date_of_job }}</p>
-    <p>{{ job.initiator }}</p>
-{#    todo: to be done #}
+
+    <div class="container1">
+        <h1>Detail of the job opp :</h1>
+        <div class="card text-center">
+
+            <div class="card-header">
+                {% if job.is_paid %}
+                    <span class="badge badge-danger">THE JOB IS PAID</span>
+                {% endif %}
+                New Casting/Auditions
+                {% if job.from_home %}
+                    <span class="badge badge-info">THE CASTING/AUDITION CAN BE FROM HOME</span>
+                {% endif %}
+            </div>
+
+            <div class="card-body">
+                <h5 class="card-title">{{ job.project|upper }}</h5>
+                <p class="card-text">
+{#                    {% if job.project.description == None %}#}
+{#                    There is No description for this Job...#}
+{#                {% else %}#}
+{#                    {{ job.project.description }}#}
+{#                {% endif %} #}
+            {% firstof job.project.description 'There is No description for this Job...'  %}</p>
+                <p class="card-text"> Role Type: {{ job.get_type_of_role_display }}</p>
+                <p class="card-text"> Gender: {{ job.get_gender_display }}</p>
+                <p class="card-text"> Age between: {{ job.get_age_wanted_display }}</p>
+                <p class="card-text"> Date and Location: <strong>{{ job.location }}</strong> - {{ job.date_of_job|naturalday|upper }}</p>
+                {% if request.user.profile not in job.actors and request.user.is_actor %}
+                <a href="{% url 'apply-job' job.id %}" class="btn btn-success">Apply For This Role</a>
+                {% elif request.user.is_actor == False %}
+                    <h4><span class="badge badge-secondary">Agent</span></h4>
+                    {% else %}
+                    <h3><span class="badge badge-success">Already Applied</span></h3>
+                {% endif %}
+            </div>
+            <div class="card-footer text-muted">
+                {% if job.initiator == user.profile %}
+                    <a href="{% url 'update_job_opp' job.id %}" class="btn-sm btn-primary">Update</a>
+                {% endif %}
+                Posted by {{ job.initiator }}, {{ job.posted_at | naturalday }}
+            </div>
+        </div>
+    </div>
+    {#    todo: to be done #}
 
 {% endblock %}
