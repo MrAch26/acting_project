@@ -41,6 +41,7 @@
                     {% else %}
                     <h3><span class="badge badge-success">Already Applied</span></h3>
                 {% endif %}
+{#todo: add id of the jobopp#}
             </div>
             <div class="card-footer text-muted">
                 {% if job.initiator == user.profile %}
@@ -49,7 +50,59 @@
                 Posted by {{ job.initiator }}, {{ job.posted_at | naturalday }}
             </div>
         </div>
-    </div>
-    {#    todo: to be done #}
 
+        <br><br>
+
+    {% if job.initiator == user.profile %}
+        <h2>List of Applicant:</h2>
+            <table class="table table-hover">
+                <caption>
+                    <div class="pagination mb-5">
+                    <span class="step-links">
+                        {% if page_obj.has_previous %}
+                            <a href="?page=1">&laquo; first</a>
+                            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                        {% endif %}
+                            <span class="current">
+                            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                            </span>
+                        {% if page_obj.has_next %}
+                            <a href="?page={{ page_obj.next_page_number }}">next</a>
+                            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                        {% endif %}
+                    </span>
+                    </div>
+                </caption>
+
+                <thead class="thead-light">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">actor_ID</th>
+                    <th scope="col">Pic.</th>
+                    <th scope="col">Full Name</th>
+                    <th scope="col">Relevance</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for participant in page_obj %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td><a href="{% url 'actor_profile' participant.applicant.user.username %}">{{ participant.applicant.id }}</a></td>
+                    <td><img src="{{ participant.applicant.picture.url }}" style="width: 50px;!important height=100px;!important " alt=""></td>
+                        <td>{{ participant.applicant }}</td>
+                        <td>
+                        {% if participant.status == 'W' %}
+                            <a href="{% url 'is-relevant' participant.id 1 %}" class="btn btn-success">Relevant</a>
+                            <a href="{% url 'is-relevant' participant.id 0 %}" class="btn btn-danger">Not Relevant</a>
+                        {% else %}
+                            {{ participant.get_status_display }}
+                        {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+    {% endif %}
+
+</div>
 {% endblock %}

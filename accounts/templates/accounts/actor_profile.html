@@ -22,7 +22,12 @@
 
 {% block content %}
     <div style="margin: 10px 50px 50px">
+{#    todo: if is_actor show 'name' profile#}
+    {% if info.user == user %}
         <h1>My Actor Profile:</h1>
+    {% else %}
+        <h1>Profile of {{ info }}</h1>
+    {% endif %}
         <div class="card mb-3" style="max-width: 800px;">
             <div class="row no-gutters">
                 <div class="col-md-4">
@@ -30,12 +35,15 @@
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">
-                        <h5 class="card-title">{{ user.first_name }} {{ user.last_name }}</h5>
+                        <h5 class="card-title">{{ info }}</h5>
+                        <p class="card-text">User : {{ info.user.username }}</p>
                         <p class="card-text">Agency : {{ info.agency }}</p>
                         <p class="card-text">Date of birth : {{ info.birth_date }}</p>
                         <p class="card-text">Phone : {{ info.phone }}</p>
                         <p class="card-text">Education : {{ info.education }}</p>
+                        {% if info.user == user %}
                         <a href="{% url 'edit_actor' %}" class="btn btn-primary">Update</a>
+                        {% endif %}
                         <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
                     </div>
                 </div>
@@ -51,7 +59,9 @@
                         <p class="card-text">Eyes : {{ info.physicalinfo.get_eyes_color_display }}</p>
                         <p class="card-text">Skin Color : {{ info.physicalinfo.get_skin_color_display }}</p>
                         <p class="card-text">Height : {{ info.physicalinfo.height }}</p>
-                        <a href="{% url 'edit_agent' %}" class="btn btn-primary">Update</a>
+                        {% if info.user == user %}
+                        <a href="{% url 'edit_actor' %}" class="btn btn-primary">Update</a>
+                        {% endif  %}
                         <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
                     </div>
                 </div>
@@ -68,7 +78,9 @@
                 <th scope="col">Description</th>
                 <th scope="col">Role Type</th>
                 <th scope="col">Publish Date</th>
+                {% if info.user == user %}
                 <th scope="col">Update</th>
+                {% endif %}
             </tr>
             </thead>
             <tbody>
@@ -77,9 +89,10 @@
                     <th scope="row">{{ forloop.counter }}</th>
                     <td>{{ foo.project.name }}</td>
                     <td>{{ foo.project.get_type_of_project_display }}</td>
-                    <td>{{ foo.project.description }}</td>
+                    <td>{{ foo.project.description | truncatechars:20}}</td>
                     <td>{{ foo.get_role_type_display }}</td>
                     <td>{{ foo.publish_date | naturalday }}</td>
+                    {% if info.user == user %}
                     <td>
                         <div class="d-inline-block"><a class="btn btn-sm btn-success"
                                                        href="{% url 'work-history-edit' foo.id %}">Edit</a></div>
@@ -90,6 +103,7 @@
                             </form>
                         </div>
                     </td>
+                    {% endif %}
                 </tr>
             {% endfor %}
             </tbody>
@@ -118,9 +132,10 @@
                 </table>
             </div>
 
-
+            {% if info.user == user %}
             <input type="button" class="btn btn-primary" value="Add More" id="add_more">
             <input class="btn btn-primary" type="submit">
+            {% endif %}
         </form>
     </div>
 {% endblock %}

@@ -3,25 +3,36 @@
 My Profile
 {% endblock %}
 {% block content %}
-<h1>My Agent Profile:</h1>
-
+{% if info.user == user %}
+        <h1>My Agent Profile:</h1>
+    {% else %}
+        <h1>Profile of {% firstof info.name_of_agent info %}</h1>
+    {% endif %}
             <div class="card mb-3" style="max-width: 800px;">
                 <div class="row no-gutters">
                     <div class="col-md-8">
                         <div class="card-body">
-                            <h5 class="card-title">{{ user.first_name }} {{ user.last_name }}</h5>
+                            <h5 class="card-title">{{ info }}</h5>
+                            <p class="card-text">User : {{ info.user.username }}</p>
                             <p class="card-text">Name of Agent/Agency/Director : {{ info.name_of_agent }}</p>
                             <p class="card-text">Created in : {{ info.created_in }}</p>
-                            <p class="card-text">Website : {{ info.website }}</p>
+                            <p class="card-text">Website : <a href="{{ info.website }}">{{ info.website }}</a></p>
                             <p class="card-text">Social Media : {{ info.social_media }}</p>
+                            {% if info.user == user %}
                             <a href="{% url 'edit_agent' %}" class="btn btn-primary">Update</a>
+                            {% endif %}
                             <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
                         </div>
                     </div>
+{#                 <div class="col-md-4">#}
+{#                     <img src="{{ info.picture agency url }}" alt="">#}
+{#                 </div>#}
                 </div>
             </div>
 
-    <a href="{% url 'create_job_opp' %}" class="btn btn-danger">CREATE JOB OPP</a>
+            {% if info.user == user %}
+            <a href="{% url 'create_job_opp' %}" class="btn btn-danger">CREATE JOB OPP</a>
+            {% endif %}
 {#todo: finish template#}
 {% endblock %}
 

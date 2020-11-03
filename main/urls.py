@@ -12,5 +12,7 @@ urlpatterns = [
     path('location-autocomplete/', views.LocationAutocomplete.as_view(create_field='name'), name='location_autocomplete'),
 
     path('participant/apply/<int:jobopp_id>', views.apply_for_job, name='apply-job'),
+    path('participant/relevant/<int:participant_id>/<int:relevant>', views.is_relevant, name='is-relevant'),
+
 
 ]

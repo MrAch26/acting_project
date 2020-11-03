@@ -146,3 +146,5 @@ class DeleteWorkHistory(DeleteView):
     def get_success_url(self, **kwargs):
         return reverse_lazy('actor_profile', kwargs={'username': self.object.actor_profile.user.username})
 
+
+

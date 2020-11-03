@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block title %}
+    Agent Dashboard
+{% endblock %}
+
+{% block content %}
+    <h1>Agent Dashboard</h1>
+
+    <div class="container">
+
+    <h2>Jobs you posted:</h2>
+            <table class="table table-hover">
+
+                <caption>
+                    <div class="pagination mb-5">
+                    <span class="step-links">
+                        {% if page_obj.has_previous %}
+                            <a href="?page=1">&laquo; first</a>
+                            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                        {% endif %}
+                            <span class="current">
+                            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                            </span>
+                        {% if page_obj.has_next %}
+                            <a href="?page={{ page_obj.next_page_number }}">next</a>
+                            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                        {% endif %}
+                    </span>
+                    </div>
+                </caption>
+
+                <thead class="thead-light">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">ID</th>
+                    <th scope="col">Casting Call</th>
+                    <th scope="col">Role Type</th>
+                    <th scope="col">Date & Location</th>
+                    <th scope="col">Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for job_opp in page_obj %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td><a href="{% url 'details_job_opp' job_opp.id %}">{{ job_opp.id }}</a></td>
+                        <td>{{ job_opp.project }}</td>
+                        <td>{{ job_opp.get_type_of_role_display }}</td>
+                        <td>{{ job_opp.location }}, {{ job_opp.date_of_job | naturalday }}</td>
+                        <td>{{ participant.get_status_display }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+
+    <h2>Some new profiles</h2>
+        <div class="card-group">
+            {% for actor in new_actors %}
+                <div class="card text-center m-2">
+                    <div class="card-header">
+                        New Profile - {{ actor }}
+                    </div>
+
+                    <div class="card-body">
+                        <img src="{{ actor.picture.url }}" class="card-img mb-1" alt="{{ actor }}">
+                        <h5 class="card-title">{{ actor }}</h5>
+                        <p class="card-text"> Agency : {{ actor.agency }}</p>
+                        <p class="card-text"> Role type : {{ job.get_type_of_role_display }}</p>
+                        <p class="card-text"> Date and Location : <strong>{{ job.location }}</strong>
+                            - {{ job.date_of_job|naturalday }}</p>
+                        <a href="{% url 'actor_profile' actor.user.username %}" class="btn btn-primary">Go to
+                            profile</a>
+
+                    </div>
+                    <div class="card-footer text-muted">
+                        {% if job.initiator == user.profile %}
+                            <a href="#" class="btn-sm btn-primary">Update</a>
+                        {% endif %}
+                        Posted
+                        by {% firstof job.initiator.name_of_agent job.initiator %}, {{ job.posted_at | naturalday }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+
+{% endblock %}
+
+
+
+

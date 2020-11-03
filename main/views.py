@@ -1,25 +1,70 @@
 import datetime
 from dal import autocomplete
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.mail import send_mail
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DeleteView, DetailView, UpdateView, CreateView
 
 from accounts.forms import EditProject
-from accounts.models import Project
+from accounts.models import Project, ActorProfile
 from main.forms import JobOppForm, JobOppEditForm, ParticipantForm
 from main.models import JobOpp, Location, Participant
+from django.core.paginator import Paginator
 
 
 def index(request):
-    context = {
-        'nav': 'index',
-        'midday': datetime.time(12),
-        'evening': datetime.time(18)
-    }
-    return render(request, 'main/index.html', context)
+    if not request.user.is_authenticated:
+        context = {
+            'nav': 'index',
+        }
+        return render(request, 'main/index.html', context)
 
+    if request.user.is_actor:
+
+        jobs = JobOpp.objects.all().order_by('-id')[:3]
+        participants = request.user.profile().participant_set.all()
+        paginator = Paginator(participants, 10)  # Show 10 contacts per page.
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        context = {'jobs': jobs, 'page_obj': page_obj}
+        return render(request, 'main/actor_dash.html', context)
+    else:
+        new_actors = ActorProfile.objects.all().order_by('-id')[:3]
+        jobs = request.user.profile().jobopp_set.all()
+        paginator = Paginator(jobs, 10)  # Show 10 contacts per page.
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        context = {'new_actors': new_actors, 'page_obj': page_obj}
+        return render(request, 'main/agent_dash.html', context)
+
+def is_relevant(request, participant_id, relevant):
+    participant = Participant.objects.get(pk=participant_id)
+
+    if request.user.profile() != participant.job_opp.initiator:
+        # messages
+        return redirect("job_opp")
+
+    if relevant:
+        participant.status = "Rel"
+        send_mail(
+            'An Agent is interested in your profile',
+            '',
+            'from@example.com',
+            [participant.applicant.user.email],
+            fail_silently=False,
+        )
+        # destination email recipient
+        #
+    else:
+        participant.status = "Not Rel"
+
+    participant.save()
+    return redirect('details_job_opp', participant.job_opp.id)
 
 def about(request):
     return render(request, 'main/about.html', {'nav': 'about'})
@@ -45,14 +90,20 @@ def create_job_opp(request):
 
     return render(request, 'main/create_job_opp.html', {'form': create_job_form})
 
-
+@login_required
 def details_job_opp(request, pk):
-    # student = Student.objects.get(id=id)
     job_opp = get_object_or_404(JobOpp, id=pk)
 
-    return render(request, 'main/job_opp_details.html', {"job": job_opp})
+    participant = Participant.objects.filter(job_opp=job_opp).order_by('-id')
+    paginator = Paginator(participant, 10)  # Show 10 contacts per page.
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
+    context = {"job": job_opp, "page_obj": page_obj}
 
+    return render(request, 'main/job_opp_details.html', context)
+
+@login_required
 def update_job_opp(request, pk):
     if request.user.is_actor:
         return redirect('home')
@@ -86,13 +137,16 @@ class DeleteJobOpp(DeleteView):
     success_url = reverse_lazy('job_opp')
     context_object_name = 'jobs'
 
+
 class ProjectDetails(DetailView):
     model = Project
     context_object_name = 'projects'
 
+
 class ProjectUpdate(UpdateView):
     model = Project
     context_object_name = 'projects'
+
 
 class LocationAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
