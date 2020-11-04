@@ -99,7 +99,6 @@ def create_profile(sender, created, instance, **kwargs):
             ActorProfile.objects.create(user=instance)
         else:
             AgentProfile.objects.create(user=instance)
-
         sendConfirm(instance)
 
         permission = Permission.objects.get(name='Can add project')
