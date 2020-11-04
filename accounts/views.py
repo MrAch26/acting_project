@@ -19,9 +19,10 @@ class UserSignUp(CreateView, SuccessMessageMixin):
     template_name = "registration/signup.html"
     model = User
     form_class = UserSignupForm
-    success_message = 'An email has been sent, please confirm your account and LOGIN'
-    success_url = reverse_lazy('home')
-    failed_message = "The User couldn't be added"
+    success_url = reverse_lazy('job_opp')
+    # todo:  MESSAGES DOENT WORK !!!!!
+    success_message = "An email has been sent, please confirm your account and LOGIN"
+
 
 @login_required
 def edit_agent_profile(request):
@@ -35,7 +36,7 @@ def edit_agent_profile(request):
         if user_edit_form.is_valid() and agent_edit_form.is_valid():
             user = user_edit_form.save()
             profile_agent = agent_edit_form.save()
-            # messages.add_message(request, messages.INFO, 'You have created an Actor Account successfully')
+            messages.add_message(request, messages.INFO, 'Your profile was updated !')
             return redirect(reverse_lazy('agent_profile', kwargs={'username': request.user.username}))
 
     context = {'user_form': user_edit_form, 'agent_form': agent_edit_form, 'nav': 'profile'}
