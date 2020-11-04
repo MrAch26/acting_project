@@ -8,7 +8,7 @@ Agent Profile
 {% block content %}
     <div style="margin: 10px 50px 50px">
     <h2>Edit agent profile :</h2>
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {% bootstrap_form user_form %}
             {% bootstrap_form agent_form %}

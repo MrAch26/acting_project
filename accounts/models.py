@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 
 from django.contrib.auth import user_logged_in
 from django.contrib.auth.models import AbstractUser, Permission, update_last_login
@@ -8,6 +8,7 @@ from django.dispatch import receiver
 from django_email_verification import sendConfirm
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
+
 
 def no_future(value):
     today = date.today()
@@ -46,13 +47,17 @@ class PhysicalInfo(models.Model):
 class ActorProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     agency = models.CharField(blank=True, max_length=100)
-    birth_date = models.DateField(null=True)
+    birth_date = models.DateField(null=True, validators=[no_future])
     phone = PhoneNumberField(blank=True)
+    is_from = models.ForeignKey('main.Location', models.CASCADE)
     education = models.TextField(null=True)
     picture = models.ImageField(upload_to='profile_pics/', default='static/images/profiledefault.jpeg')
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name}"
+
+    def birthyear(self):
+        return datetime.now().year - self.birth_date.year
 
 
 class AgentProfile(models.Model):
@@ -61,6 +66,9 @@ class AgentProfile(models.Model):
     created_in = models.DateField(null=True, help_text="Enter the date of creation", validators=[no_future])
     website = models.URLField(blank=True)
     social_media = models.CharField(max_length=50, blank=True)
+    is_from = models.ForeignKey('main.Location', models.CASCADE)
+    picture = models.ImageField(upload_to='profile_pics_agent/', default='static/images/profiledefault.jpeg')
+
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name}"
@@ -97,14 +105,3 @@ def create_profile(sender, created, instance, **kwargs):
         permission1 = Permission.objects.get(name='Can add location')
         instance.user_permissions.add(permission)
         instance.user_permissions.add(permission1)
-
-# @receiver(post_save, sender=CustomUser)
-# def update_first_login(sender, instance, **kwargs):
-#     if instance.user.last_login is None:
-#         # First time this user has logged in
-#         kwargs['request'].session['first_login'] = True
-#     # Update the last_login value as normal
-#     update_last_login(sender, instance.user, **kwargs)
-#
-# user_logged_in.disconnect(update_last_login)
-# user_logged_in.connect(update_first_login)

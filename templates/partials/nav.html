@@ -2,7 +2,7 @@
 <nav class="navbar navbar-expand-lg navbar-mainbg">
         <a class="navbar-brand navbar-logo font1" href="{% url 'home' %}">
              <img src="{% static 'images/favicon.ico' %}" alt="">
-            ActingPriviledges
+            Casting Callz
             <img src="{% static 'images/favicon.ico' %}" alt=""></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <i class="fas fa-bars text-white"></i>
@@ -15,7 +15,7 @@
 {#                    <a class="nav-link" href="/"><i class="far fa-address-book"></i>Address Book</a>#}
 {#                </li>#}
                 <li class="nav-item nav-panel {% if nav == 'about' %}active{% endif %}">
-                    <a class="about nav-link" href="{% url 'about' %}"><i class="fas fa-address-card"></i>About</a>
+                    <a class="about nav-link" href="{% url 'about' %}"><i class="fas fa-address-card"></i>About us</a>
                 </li>
                 <li class="nav-item nav-panel {% if nav == 'job_opp' %}active{% endif %}">
                     <a class="nav-link" id="abc" href="{% url 'job_opp' %}"><i class="fas fa-film"></i>Casting Calls</a>

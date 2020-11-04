@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>EMAIL</title>
+</head>
+<body>
+<h1>Hello {{ participant.applicant.user.first_name }}</h1>
+<h2>We are glad to announce that an agent({{ participant.job_opp.initiator }}) marked you as "Relevent" for his <a href="{% url 'details_job_opp' participant.job_opp.id %}">project</a></h2>
+<h3>He will be contacting very shortly</h3>
+<h4>Stay tuned 😎</h4>
+<p>Daniel from CastingCallz 🎬</p>
+</body>
+</html>

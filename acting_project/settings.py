@@ -34,8 +34,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'dal',
-    'dal_select2',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -43,11 +41,20 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    'accounts',
+
+    # apps
     'main',
+    'accounts',
+
+    # auto-select
+    'dal',
+    'dal_select2',
+
+    # extra
     'django_email_verification',
     'phonenumber_field',
-    'bootstrap4'
+    'bootstrap4',
+    'django_filters'
 ]
 
 MIDDLEWARE = [
@@ -131,10 +138,10 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# EMAIL
+# EMAIL Confirmation
+
 EMAIL_ACTIVE_FIELD = 'is_active'
 EMAIL_SERVER = 'smtp.gmail.com'
-EMAIL_PORT = 587
 EMAIL_ADDRESS = 'frenchacting.aac@gmail.com'
 EMAIL_FROM_ADDRESS = 'frenchacting.aac@gmail.com'
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
@@ -143,6 +150,13 @@ EMAIL_MAIL_HTML = 'email/mail_body.html'
 EMAIL_MAIL_PLAIN = 'email/mail_body.txt'
 EMAIL_PAGE_TEMPLATE = 'email/confirm_template.html'
 EMAIL_PAGE_DOMAIN = 'http://127.0.0.1:8000/'
+
+# Send email when relevant
+EMAIL_PORT = 587
+EMAIL_HOST = EMAIL_SERVER
+EMAIL_HOST_USER = EMAIL_ADDRESS
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PASSWORD")
+EMAIL_USE_TLS = True
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 

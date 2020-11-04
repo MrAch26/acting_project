@@ -1,18 +1,34 @@
 {% extends 'base.html' %}
+{% load bootstrap4 %}
 {% load humanize %}
 {% block content %}
-    <h1>Casting Calllllz </h1>
-    {% if not user.is_actor and user.username %}
+    <h1>Casting Calllllz {% if not user.is_actor and user.username %}
         <a href="{% url 'create_job_opp' %}" class="btn btn-danger">CREATE JOB OPP</a>
-    {% endif %}
+    {% endif %}</h1>
+
     <br>
-   <div class="container1">
-   <div class="card-columns">
-    {% for job in jobs %}
+   <div class="container">
+       <form method="get">
+{#        {% bootstrap_form filter.form layout='horizontal' size='small' field_class='form-field' %}#}
+           <div class="row">
+           {% for field in filter.form %}
+            <div class="col text-center">
+            {% bootstrap_field field size='small' %}
+            </div>
+            {% endfor %}
+               <div class="m-auto">
+               <button type="submit" class="btn btn-sm btn-primary mt-3">Search</button>
+               </div>
+           </div>
+
+       </form>
+
+
+   <div class="row">
+    {% for job in filter.qs %}
+        <div class="col-lg-4 col-sm-6 col-xs-12">
         <div class="card text-center m-2">
-
             <div class="card-header">
-
                 New Casting/Auditions
                 <p>
                 {% if job.is_paid %}
@@ -42,7 +58,9 @@
                 Posted by <a href="{% url 'agent_profile' job.initiator.user.username %}">{% firstof job.initiator.name_of_agent job.initiator %}</a>, {{ job.posted_at | naturalday }}
             </div>
         </div>
+        </div>
     {% endfor %}
+    </div>
     </div>
    </div>
 {% endblock %}

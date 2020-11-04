@@ -23,13 +23,6 @@ class UserSignUp(CreateView, SuccessMessageMixin):
     success_url = reverse_lazy('home')
     failed_message = "The User couldn't be added"
 
-    # todo: not relevant because confirmation email needed !!
-    # def get_success_url(self, **kwargs):
-    #     if self.request.user.is_actor:
-    #         return reverse_lazy('edit_actor')
-    #     else:
-    #         return reverse_lazy('edit_agent')
-
 @login_required
 def edit_agent_profile(request):
     if request.user.is_actor:
@@ -38,6 +31,7 @@ def edit_agent_profile(request):
     agent_edit_form = EditAgentProfile(request.POST or None, instance=request.user.profile())
 
     if request.method == 'POST':
+        agent_edit_form = EditAgentProfile(request.POST, request.FILES, instance=request.user.profile())
         if user_edit_form.is_valid() and agent_edit_form.is_valid():
             user = user_edit_form.save()
             profile_agent = agent_edit_form.save()

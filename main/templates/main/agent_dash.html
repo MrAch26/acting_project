@@ -8,7 +8,7 @@
     <h1>Agent Dashboard</h1>
 
     <div class="container">
-
+        <br>
     <h2>Jobs you posted:</h2>
             <table class="table table-hover">
 
@@ -37,7 +37,7 @@
                     <th scope="col">Casting Call</th>
                     <th scope="col">Role Type</th>
                     <th scope="col">Date & Location</th>
-                    <th scope="col">Status</th>
+                    <th scope="col">Details</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -48,7 +48,7 @@
                         <td>{{ job_opp.project }}</td>
                         <td>{{ job_opp.get_type_of_role_display }}</td>
                         <td>{{ job_opp.location }}, {{ job_opp.date_of_job | naturalday }}</td>
-                        <td>{{ participant.get_status_display }}</td>
+                        <td><a class="btn btn-sm btn-secondary" href="{% url 'details_job_opp' job_opp.id %}">More details</a></td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -67,19 +67,10 @@
                         <img src="{{ actor.picture.url }}" class="card-img mb-1" alt="{{ actor }}">
                         <h5 class="card-title">{{ actor }}</h5>
                         <p class="card-text"> Agency : {{ actor.agency }}</p>
-                        <p class="card-text"> Role type : {{ job.get_type_of_role_display }}</p>
-                        <p class="card-text"> Date and Location : <strong>{{ job.location }}</strong>
-                            - {{ job.date_of_job|naturalday }}</p>
+                        <p class="card-text"> Age : {{ actor.birth_date }}</p>
+                        <p class="card-text"> From : <strong>{{ actor.is_from }}</strong></p>
                         <a href="{% url 'actor_profile' actor.user.username %}" class="btn btn-primary">Go to
                             profile</a>
-
-                    </div>
-                    <div class="card-footer text-muted">
-                        {% if job.initiator == user.profile %}
-                            <a href="#" class="btn-sm btn-primary">Update</a>
-                        {% endif %}
-                        Posted
-                        by {% firstof job.initiator.name_of_agent job.initiator %}, {{ job.posted_at | naturalday }}
                     </div>
                 </div>
             {% endfor %}

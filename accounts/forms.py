@@ -28,6 +28,13 @@ class EditActorProfile(forms.ModelForm):
     class Meta:
         model = ActorProfile
         exclude = ['user', 'physical_infos']
+        widgets = {
+            'is_from': autocomplete.ModelSelect2(url='location_autocomplete', attrs={'class': 'fix-height1'}),
+            'birth_date': DateInput()
+        }
+        labels = {
+            'is_from': 'Where are you from ? '
+        }
 
 
 class EditAgentProfile(forms.ModelForm):
@@ -61,7 +68,7 @@ class WorkHistoryForm(forms.ModelForm):
         model = WorkHistory
         exclude = ['actor_profile']
         widgets = {
-            'project': autocomplete.ModelSelect2(url='project_autocomplete'),
+            'project': autocomplete.ModelSelect2(url='project_autocomplete', attrs={'class': 'fix-height1'}),
             'publish_date': DateInput()
         }
 

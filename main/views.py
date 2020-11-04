@@ -1,15 +1,19 @@
 import datetime
 from dal import autocomplete
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect, get_object_or_404
+from django.template import RequestContext
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DeleteView, DetailView, UpdateView, CreateView
 
 from accounts.forms import EditProject
 from accounts.models import Project, ActorProfile
+from main.filter import JobOppFilter
 from main.forms import JobOppForm, JobOppEditForm, ParticipantForm
 from main.models import JobOpp, Location, Participant
 from django.core.paginator import Paginator
@@ -51,15 +55,19 @@ def is_relevant(request, participant_id, relevant):
 
     if relevant:
         participant.status = "Rel"
+        text_message = f'{participant.job_opp.initiator}, marqued your application as Relevvant he will get in touch with you soon is the agent'
+        message = render_to_string('email/relevant_body.html', {'participant': participant})
         send_mail(
-            'An Agent is interested in your profile',
-            '',
-            'from@example.com',
+            f'An Agent is interested in your profile - {participant.job_opp.initiator}',
+            text_message,
+            settings.EMAIL_HOST_USER,
             [participant.applicant.user.email],
+            html_message=message,
             fail_silently=False,
         )
+
         # destination email recipient
-        #
+
     else:
         participant.status = "Not Rel"
 
@@ -129,6 +137,7 @@ class JobOppList(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['nav'] = 'job_opp'
+        context['filter'] = JobOppFilter(self.request.GET, queryset=self.get_queryset())
         return context
 
 
@@ -164,3 +173,4 @@ def apply_for_job(request, jobopp_id):
     participant, created = Participant.objects.get_or_create(applicant=request.user.profile(), job_opp=job)
 
     return redirect('details_job_opp', jobopp_id)
+

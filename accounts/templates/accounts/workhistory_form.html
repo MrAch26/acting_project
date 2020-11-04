@@ -5,6 +5,7 @@ Work History
 {% endblock %}
 
 {% block content %}
+    <div class="container">
     <h1>Update your WorkHistory </h1>
     <form method="post">
     {% csrf_token %}
@@ -13,5 +14,5 @@ Work History
 {#        {{ workhistory.project.type_of_project }}#}
     <button class="btn btn-success">Edit</button>
     </form>
-
+    </div>
 {% endblock %}

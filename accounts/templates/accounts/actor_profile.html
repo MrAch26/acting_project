@@ -21,14 +21,13 @@
 
 
 {% block content %}
-    <div style="margin: 10px 50px 50px">
-{#    todo: if is_actor show 'name' profile#}
+    <div class="text-center container">
     {% if info.user == user %}
         <h1>My Actor Profile:</h1>
     {% else %}
         <h1>Profile of {{ info }}</h1>
     {% endif %}
-        <div class="card mb-3" style="max-width: 800px;">
+        <div class="card mb-3">
             <div class="row no-gutters">
                 <div class="col-md-4">
                     <img src="{{ info.picture.url }}" class="card-img" alt="...">
@@ -38,9 +37,19 @@
                         <h5 class="card-title">{{ info }}</h5>
                         <p class="card-text">User : {{ info.user.username }}</p>
                         <p class="card-text">Agency : {{ info.agency }}</p>
-                        <p class="card-text">Date of birth : {{ info.birth_date }}</p>
-                        <p class="card-text">Phone : {{ info.phone }}</p>
+                        <p class="card-text">Age : {{ info.birthyear }} years old ({{ info.birth_date }})</p>
+                        <p class="card-text">From : {{ info.is_from }}</p>
                         <p class="card-text">Education : {{ info.education }}</p>
+
+                    <div class="left">
+                        <h2><u>Physical Info</u></h2>
+                        <p class="card-text">Hair Color : {{ info.physicalinfo.get_hair_color_display }}</p>
+                        <p class="card-text">Type of Hair : {{ info.physicalinfo.get_types_of_hair_display }}</p>
+                        <p class="card-text">Eyes : {{ info.physicalinfo.get_eyes_color_display }}</p>
+                        <p class="card-text">Skin Color : {{ info.physicalinfo.get_skin_color_display }}</p>
+                        <p class="card-text">Height : {{ info.physicalinfo.height }} cm</p>
+                    </div>
+                        <br>
                         {% if info.user == user %}
                         <a href="{% url 'edit_actor' %}" class="btn btn-primary">Update</a>
                         {% endif %}
@@ -49,24 +58,24 @@
                 </div>
             </div>
         </div>
-        <h2><u>Physical Info</u></h2>
-        <div class="card mb-3" style="max-width: 800px;">
-            <div class="row no-gutters">
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <p class="card-text">Hair Color : {{ info.physicalinfo.get_hair_color_display }}</p>
-                        <p class="card-text">Type of Hair : {{ info.physicalinfo.get_types_of_hair_display }}</p>
-                        <p class="card-text">Eyes : {{ info.physicalinfo.get_eyes_color_display }}</p>
-                        <p class="card-text">Skin Color : {{ info.physicalinfo.get_skin_color_display }}</p>
-                        <p class="card-text">Height : {{ info.physicalinfo.height }}</p>
-                        {% if info.user == user %}
-                        <a href="{% url 'edit_actor' %}" class="btn btn-primary">Update</a>
-                        {% endif  %}
-                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                    </div>
-                </div>
-            </div>
-        </div>
+{#        <h2><u>Physical Info</u></h2>#}
+{#        <div class="card mb-3" style="max-width: 800px;">#}
+{#            <div class="row no-gutters">#}
+{#                <div class="col-md-8">#}
+{#                    <div class="card-body">#}
+{#                        <p class="card-text">Hair Color : {{ info.physicalinfo.get_hair_color_display }}</p>#}
+{#                        <p class="card-text">Type of Hair : {{ info.physicalinfo.get_types_of_hair_display }}</p>#}
+{#                        <p class="card-text">Eyes : {{ info.physicalinfo.get_eyes_color_display }}</p>#}
+{#                        <p class="card-text">Skin Color : {{ info.physicalinfo.get_skin_color_display }}</p>#}
+{#                        <p class="card-text">Height : {{ info.physicalinfo.height }} cm</p>#}
+{#                        {% if info.user == user %}#}
+{#                        <a href="{% url 'edit_actor' %}" class="btn btn-primary">Update</a>#}
+{#                        {% endif  %}#}
+{#                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
 
         <h2><u>Work History</u></h2>
         <table class="table table-hover text-center">
@@ -137,6 +146,7 @@
             <input class="btn btn-primary" type="submit">
             {% endif %}
         </form>
+        <br>
     </div>
 {% endblock %}
 
