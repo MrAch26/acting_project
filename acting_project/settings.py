@@ -29,7 +29,7 @@ SECRET_KEY = 'luk9l(1_hx9#7y)o2ky=v&_eo$pg2e867ag%5^)+rizxwn973h'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['castingcallz.pythonanywhere.com']
+ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -90,10 +90,21 @@ WSGI_APPLICATION = 'acting_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'db_acting',
+        'USER': 'postgres',
+        'PASSWORD': 'Ba1958',
+        'HOST': '127.0.0.1',
+        'PORT': '5433',
     }
 }
 
@@ -149,7 +160,7 @@ EMAIL_MAIL_SUBJECT = 'Confirm your email'
 EMAIL_MAIL_HTML = 'email/mail_body.html'
 EMAIL_MAIL_PLAIN = 'email/mail_body.txt'
 EMAIL_PAGE_TEMPLATE = 'email/confirm_template.html'
-EMAIL_PAGE_DOMAIN = 'http://castingcallz.pythonanywhere.com/'
+EMAIL_PAGE_DOMAIN = 'http://127.0.0.1:8000/'
 
 # Send email when relevant
 EMAIL_PORT = 587
