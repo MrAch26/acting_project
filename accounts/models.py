@@ -49,7 +49,7 @@ class ActorProfile(models.Model):
     agency = models.CharField(blank=True, max_length=100)
     birth_date = models.DateField(null=True, validators=[no_future])
     phone = PhoneNumberField(blank=True)
-    is_from = models.ForeignKey('main.Location', models.CASCADE)
+    is_from = models.ForeignKey('main.Location', models.CASCADE, null=True)
     education = models.TextField(null=True)
     picture = models.ImageField(upload_to='profile_pics/', default='static/images/profiledefault.jpeg')
 
@@ -66,7 +66,7 @@ class AgentProfile(models.Model):
     created_in = models.DateField(null=True, help_text="Enter the date of creation", validators=[no_future])
     website = models.URLField(blank=True)
     social_media = models.CharField(max_length=50, blank=True)
-    is_from = models.ForeignKey('main.Location', models.CASCADE)
+    is_from = models.ForeignKey('main.Location', models.CASCADE, null=True)
     picture = models.ImageField(upload_to='profile_pics_agent/', default='static/images/profiledefault.jpeg')
 
 
