@@ -123,7 +123,7 @@ class UpdateWorkHistory(UpdateView):
     form_class = WorkHistoryForm
 
     def get_success_url(self, **kwargs):
-        return reverse_lazy('profile', kwargs={'username': self.object.actor_profile.user.username})
+        return reverse_lazy('actor_profile', kwargs={'username': self.object.actor_profile.user.username})
 
     #
     # def get_context_data(self, **kwargs):

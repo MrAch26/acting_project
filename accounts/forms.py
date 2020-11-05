@@ -41,6 +41,9 @@ class EditActorProfile(forms.ModelForm):
         labels = {
             'is_from': 'Where are you from ? '
         }
+        help_texts = {
+            'phone': 'Not Required // ex: +32 476 02 05 09'
+        }
 
 
 class EditAgentProfile(forms.ModelForm):
@@ -69,7 +72,7 @@ class PhysicalInfoForm(forms.ModelForm):
 
 class WorkHistoryForm(forms.ModelForm):
     TYPE_PROJECT_CHOICES = [("movie", "Movie"), ("tv-show", "TV-Show"), ("play", "Theatrical Play"), ("other", "Other")]
-    desc = forms.CharField()
+    desc = forms.CharField(label='Description')
     type_of_project = forms.ChoiceField(choices=TYPE_PROJECT_CHOICES)
 
     class Meta:
