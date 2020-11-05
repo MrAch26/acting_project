@@ -2,12 +2,13 @@
 {% load bootstrap4 %}
 {% load humanize %}
 {% block content %}
-    <h1>Casting Calllllz {% if not user.is_actor and user.username %}
-        <a href="{% url 'create_job_opp' %}" class="btn btn-danger">CREATE JOB OPP</a>
-    {% endif %}</h1>
 
     <br>
    <div class="container">
+    <h1>Castings & Auditions {% if not user.is_actor and user.username %}
+        <a href="{% url 'create_job_opp' %}" class="btn btn-danger">CREATE JOB OPP</a>
+    {% endif %}</h1>
+       <br>
        <form method="get">
 {#        {% bootstrap_form filter.form layout='horizontal' size='small' field_class='form-field' %}#}
            <div class="row">
