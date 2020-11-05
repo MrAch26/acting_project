@@ -57,8 +57,8 @@ class ActorProfile(models.Model):
         return f"{self.user.first_name} {self.user.last_name}"
 
     def birthyear(self):
-        return datetime.now().year - self.birth_date.year
-
+        if self.birth_date:
+            return datetime.now().year - self.birth_date.year
 
 class AgentProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)

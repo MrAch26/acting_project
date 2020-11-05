@@ -29,7 +29,7 @@ SECRET_KEY = 'luk9l(1_hx9#7y)o2ky=v&_eo$pg2e867ag%5^)+rizxwn973h'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['castingcallz.pythonanywhere.com']
+ALLOWED_HOSTS = ['castingcallz.pythonanywhere.com', '127.0.0.1']
 
 # Application definition
 
