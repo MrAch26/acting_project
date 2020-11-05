@@ -15,12 +15,12 @@ from accounts.forms import UserSignupForm, EditActorProfile, EditAgentProfile, E
 from accounts.models import ActorProfile, AgentProfile, Project, CustomUser, WorkHistory, PhysicalInfo
 
 
-class UserSignUp(CreateView, SuccessMessageMixin):
+class UserSignUp(SuccessMessageMixin, CreateView):
     template_name = "registration/signup.html"
     model = User
     form_class = UserSignupForm
-    success_message = 'An email has been sent, please confirm your account and LOGIN'
     success_url = reverse_lazy('home')
+    success_message = 'An email has been sent, please confirm your account and LOGIN'
     failed_message = "The User couldn't be added"
 
 @login_required
@@ -59,7 +59,7 @@ def edit_actor_profile(request):
             user = user_edit_form.save()
             profile = profile_edit_form.save()
             physical_info = physical_info_form.save()
-            # messages.add_message(request, messages.INFO, 'You have created an Actor Account successfully')
+            messages.add_message(request, messages.INFO, 'You have updated success')
             return redirect(reverse_lazy('actor_profile', kwargs={'username': request.user.username}))
 
     work_history = request.user.profile()
