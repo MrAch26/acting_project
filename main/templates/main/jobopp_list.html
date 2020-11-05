@@ -44,7 +44,8 @@
 
             <div class="card-body">
                 <h5 class="card-title">{{ job.project}}</h5>
-                <p class="card-text">With supporting dtext below as a natural lead-in to additional content.</p>
+                <p class="card-text">{{ job.project.get_type_of_project_display }}</p>
+                <p class="card-text"> Looking For : {{ job.get_gender_display }}</p>
                 <p class="card-text"> Age between : {{ job.get_age_wanted_display }}</p>
                 <p class="card-text"> Role type : {{ job.get_type_of_role_display }}</p>
                 <p class="card-text"> Date and Location : <strong>{{ job.location }}</strong> - {{ job.date_of_job|naturalday }}</p>
