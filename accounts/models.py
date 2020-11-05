@@ -20,9 +20,12 @@ def no_future(value):
 #     if value < today:
 #         raise ValidationError('Date cannot be in the past.')
 
+
 class CustomUser(AbstractUser):
+    BOOL_CHOICES = ((True, 'Actor 🎭'), (False, 'Agent 😎'))
+
     email = models.EmailField(unique=True)
-    is_actor = models.BooleanField(default=True)
+    is_actor = models.BooleanField(default=True, choices=BOOL_CHOICES)
 
     def profile(self):
         if self.is_actor:

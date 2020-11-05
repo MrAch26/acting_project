@@ -12,9 +12,15 @@ class DateInput(forms.DateInput):
 class UserSignupForm(UserCreationForm):
     class Meta:
         model = CustomUser
-        fields = ["username", "email", "password1", "password2", "is_actor"]
+        fields = ["is_actor", "username", "email", "password1", "password2"]
         labels = {
-            "is_actor": "Are you an actor ?"
+            "is_actor": "Which side are you ? 😈"
+        }
+        help_texts = {
+            'email': '<ul><li>An email will be sent for confirmation</li> <li>Please type a right email !</li></ul>'
+        }
+        widgets = {
+            'is_actor1': forms.RadioSelect()
         }
 
 
