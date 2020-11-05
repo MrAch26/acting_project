@@ -172,3 +172,8 @@ def apply_for_job(request, jobopp_id):
 
     return redirect('details_job_opp', jobopp_id)
 
+class ActorList(ListView):
+    model = ActorProfile
+    context_object_name = 'new_actors'
+    ordering = ['-id']
+    template_name = 'main/actor_list.html'

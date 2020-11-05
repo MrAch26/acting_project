@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Actor List
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Some new profiles</h2><br>
+<div class="row">
+
+            {% for actor in new_actors %}
+                <br>
+                <div class="card text-center m-2">
+                    <div class="card-header">
+                        New Profile - {{ actor }}
+                    </div>
+
+                    <div class="card-body">
+                        <img src="{{ actor.picture.url }}" class="card-img mb-1" alt="{{ actor }}" style="width: 250px;!important height: auto;!important " >
+                        <h5 class="card-title">{{ actor }}</h5>
+                        <p class="card-text"> Agency : {{ actor.agency }}</p>
+                        <p class="card-text"> Age : {{ actor.birth_date }}</p>
+                        <p class="card-text"> From : <strong>{{ actor.is_from }}</strong></p>
+                        <a href="{% url 'actor_profile' actor.user.username %}" class="btn btn-primary">Go to
+                            profile</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+    </div>
+{% endblock %}

@@ -16,4 +16,5 @@ urlpatterns = [
     path('edit_workhistory/<int:pk>', UpdateWorkHistory.as_view(), name='work-history-edit'),
     path('delete_workhistory/<int:pk>', DeleteWorkHistory.as_view(), name='work-history-delete'),
 
+
 ]

@@ -14,6 +14,9 @@
                 <li class="nav-item nav-panel">
                     <a class="nav-link" href="{% url 'home' %}"><i class="far fa-address-book"></i>Dashboard</a>
                 </li>
+                <li class="nav-item nav-panel">
+                    <a class="nav-link" href="{% url 'actor_list' %}"><i class="far fa-address-book"></i>Actors</a>
+                </li>
                 {% endif %}
                 <li class="nav-item nav-panel {% if nav == 'about' %}active{% endif %}">
                     <a class="about nav-link" href="{% url 'about' %}"><i class="fas fa-address-card"></i>About us</a>

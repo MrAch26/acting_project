@@ -14,4 +14,5 @@ urlpatterns = [
     path('participant/apply/<int:jobopp_id>', views.apply_for_job, name='apply-job'),
     path('participant/relevant/<int:participant_id>/<int:relevant>', views.is_relevant, name='is-relevant'),
 
+    path('actor_list', views.ActorList.as_view(), name='actor_list')
 ]
