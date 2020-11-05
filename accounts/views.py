@@ -35,7 +35,7 @@ def edit_agent_profile(request):
         if user_edit_form.is_valid() and agent_edit_form.is_valid():
             user = user_edit_form.save()
             profile_agent = agent_edit_form.save()
-            # messages.add_message(request, messages.INFO, 'You have created an Actor Account successfully')
+            messages.add_message(request, messages.INFO, 'Successfully Updated !')
             return redirect(reverse_lazy('agent_profile', kwargs={'username': request.user.username}))
 
     context = {'user_form': user_edit_form, 'agent_form': agent_edit_form, 'nav': 'profile'}

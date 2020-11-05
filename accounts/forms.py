@@ -52,7 +52,8 @@ class EditAgentProfile(forms.ModelForm):
         }
         widgets = {
             'name_of_agent': forms.TextInput(attrs={'placeholder': 'if same leave blank'}),
-            'created_in': DateInput()
+            'created_in': DateInput(),
+            'is_from': autocomplete.ModelSelect2(url='location_autocomplete', attrs={'class': 'fix-height1'}),
         }
 
 

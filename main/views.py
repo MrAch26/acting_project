@@ -55,6 +55,7 @@ def is_relevant(request, participant_id, relevant):
 
     if relevant:
         participant.status = "Rel"
+        messages.add_message(request, messages.INFO, 'An email was sent to the user Successfully!')
         text_message = f'{participant.job_opp.initiator}, marqued your application as Relevvant he will get in touch with you soon is the agent'
         message = render_to_string('email/relevant_body.html', {'participant': participant})
         send_mail(
@@ -93,7 +94,7 @@ def create_job_opp(request):
             # proj_form = EditProject(request.POST, instance=job.project)
             # if proj_form.is_valid():
             #     proj_form.save()
-
+            messages.add_message(request, messages.INFO, 'A new Job Opportunity was created !')
             return redirect(reverse_lazy('details_job_opp', kwargs={'pk': job.id}))
 
     return render(request, 'main/create_job_opp.html', {'form': create_job_form})
@@ -123,7 +124,7 @@ def update_job_opp(request, pk):
         if update_job_form.is_valid():
             job_update = update_job_form.save()
             proj_update = update_proj_form.save()
-            # messages.add_message(request, messages.INFO, 'You have created an Actor Account successfully')
+            messages.add_message(request, messages.INFO, 'Successfully Updated !')
             return redirect(reverse_lazy('details_job_opp', kwargs={'pk': job.id}))
 
     return render(request, 'main/update_job_opp.html', {'form': update_job_form, 'proj_form': update_proj_form})
@@ -171,6 +172,7 @@ def apply_for_job(request, jobopp_id):
         return redirect('job_opp')
     job = JobOpp.objects.get(id=jobopp_id)
     participant, created = Participant.objects.get_or_create(applicant=request.user.profile(), job_opp=job)
+    messages.add_message(request, messages.INFO, 'You Applied Successfully !')
 
     return redirect('details_job_opp', jobopp_id)
 
