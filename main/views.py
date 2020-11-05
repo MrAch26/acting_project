@@ -1,20 +1,16 @@
-import datetime
 from dal import autocomplete
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect, get_object_or_404
-from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DeleteView, DetailView, UpdateView, CreateView
-
 from accounts.forms import EditProject
 from accounts.models import Project, ActorProfile
 from main.filter import JobOppFilter
-from main.forms import JobOppForm, JobOppEditForm, ParticipantForm
+from main.forms import JobOppForm, JobOppEditForm
 from main.models import JobOpp, Location, Participant
 from django.core.paginator import Paginator
 

@@ -48,12 +48,13 @@ class EditAgentProfile(forms.ModelForm):
         model = AgentProfile
         exclude = ['user']
         labels = {
-            'name_of_agent': 'Name of the agency'
+            'name_of_agent': 'Name of the agency',
+            'is_from': 'Where are you from ? '
         }
         widgets = {
             'name_of_agent': forms.TextInput(attrs={'placeholder': 'if same leave blank'}),
             'created_in': DateInput(),
-            'is_from': autocomplete.ModelSelect2(url='location_autocomplete', attrs={'class': 'fix-height1'}),
+            'is_from': autocomplete.ModelSelect2(url='location_autocomplete', attrs={'class': 'fix-height1'})
         }
 
 
